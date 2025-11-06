@@ -21,6 +21,10 @@ export default class SearchbarPage {
         await this.getSearchbarInput.click({ force: true });
     }
 
+    async clickSearchbarCloseButton() {
+        await this.getSearchbarCloseButton.click({ force: true });
+    }
+
     async clickIncreaseProductButton() {
         return this.mobile ? this.page.locator('div[data-sentry-element="TabletContent"] div[data-testid="search-results"] svg[class*="tabler-icon tabler-icon-plus"]').click({ delay: 300 }) : this.page.locator('div[data-sentry-element="WebContent"] div[data-testid="search-results"] svg[class*="tabler-icon tabler-icon-plus"]').click({ delay: 300 });
     }

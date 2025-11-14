@@ -309,8 +309,6 @@ export const test = baseTest.extend<MyFixtures>({
       await page.waitForTimeout(1000);
       await page.locator(selectors.Searchbar.common.productSearchAddButton).first().click({ force: true, delay: 300 });
       await page.waitForTimeout(4000);
-      await searchbarPage.clickSearchbarCloseButton();
-      await page.waitForTimeout(1000);
     };
     await use(addProduct);
   },

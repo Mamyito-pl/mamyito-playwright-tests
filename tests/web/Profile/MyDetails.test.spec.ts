@@ -122,6 +122,26 @@ test.describe('Testy moje dane', async () => {
     await page.waitForTimeout(2000);
 
     expect(myDetailsPage.getNameSurnameContent).toHaveText(exampleName + ' ' + exampleSurname, { timeout: 15000 });
+
+    const postAccountData = await page.request.patch(`${process.env.APIURL}/api/me/update-account`, {
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+      },
+      data: {
+        first_name: 'TEST',
+        last_name: 'TEST',
+      },
+    });
+
+    expect(postAccountData.status()).toBe(200);
+
+    await page.reload();
+
+    await page.waitForLoadState('load');
+
+    await expect(myDetailsPage.getMyDetailsTitle).toBeVisible({ timeout: 10000 });
+
+    await expect(myDetailsPage.getNameSurnameContent).toHaveText('TEST TEST', { timeout: 15000 });
   })
 
   test('W | Możliwość zmiany daty urodzenia', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {

@@ -16,7 +16,7 @@ export default class FavouritesPage {
     }
 
     get getFavouritesProductsTitle() {
-        return this.page.locator('div[id="profile_details_favourites"]:has-text("Ulubione produkty")');
+        return this.page.locator('main div[id="profile_details_favourites"]:has-text("Ulubione produkty")');
     }
 
     get getProductPrices() {

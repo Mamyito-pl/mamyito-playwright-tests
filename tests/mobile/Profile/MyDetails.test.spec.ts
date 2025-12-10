@@ -142,7 +142,7 @@ test.describe('Testy moje dane', async () => {
     await expect(myDetailsPage.getNameSurnameContent).toHaveText('TEST TEST', { timeout: 15000 });
   })
   
-  test('M | Możliwość zmiany daty urodzenia', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
+  test('M | Możliwość zmiany daty urodzenia', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, setDateBirthViaAPI }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');
@@ -155,7 +155,7 @@ test.describe('Testy moje dane', async () => {
 
     await page.waitForTimeout(4000);
 
-    const exampleDateBirth = faker.date.birthdate({ min: 18, max: 65, mode: 'age' });
+    const exampleDateBirth = faker.date.birthdate({ min: 15, max: 17, mode: 'age' });
     const formattedEDB = format(exampleDateBirth, 'yyyy-MM-dd');
     
     await expect(myDetailsPage.getMyDetailsTitle).toBeVisible({ timeout: 10000 });
@@ -184,6 +184,8 @@ test.describe('Testy moje dane', async () => {
     );
 
     expect(newNameSurnameIsVisible).toBe(true);
+
+    await setDateBirthViaAPI("2000-01-01");
   })
 
   test('M | Możliwość zmiany numeru telefonu', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {

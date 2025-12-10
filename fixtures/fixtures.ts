@@ -47,6 +47,7 @@ type MyFixtures = {
     detachDeliverySlotViaAPI: () => Promise<void>;
     addProductsByValue: (maxValue: number) => Promise<void>;
     removeDiscountCodeViaAPI: () => Promise<void>;
+    setDateBirthViaAPI: (dateBirth: string) => Promise<void>;
 };
 
 export const test = baseTest.extend<MyFixtures>({
@@ -267,6 +268,39 @@ export const test = baseTest.extend<MyFixtures>({
     };
     
     await use(smsConsentViaAPI);
+  },
+
+  setDateBirthViaAPI: async ({ request }, use) => {
+    
+    const setDateBirthViaAPI = async (dateBirth: string): Promise<void> => {
+      
+      const tokenResponse = await request.post(`${process.env.APIURL}/api/login`, {
+        headers: {
+          'Accept': 'application/json'
+      },
+        data: {
+          email: `${process.env.EMAIL}`,
+          password: `${process.env.PASSWORD}`,
+        },
+      });
+
+      const responseBodyToken = await tokenResponse.json();
+
+      const token = responseBodyToken.data.token;
+
+      const smsConsentResponse = await request.patch(`${process.env.APIURL}/api/me/update-account`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        data: {
+          date_of_birth: "2000-01-01",
+        },
+      });
+
+      expect([200, 204]).toContain(smsConsentResponse.status());
+    };
+    
+    await use(setDateBirthViaAPI);
   },
 
   searchProduct: async ({ page }, use) => {

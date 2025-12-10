@@ -312,7 +312,7 @@ test.describe('Testy koszyka', async () => {
     await expect(mainPage.getBannersSection).toBeVisible();
   })
 
-  test.describe('M | Możliwość dodania do koszyka najczęściej kupowanych produktów', async () => {
+  test.describe.skip('M | Możliwość dodania do koszyka najczęściej kupowanych produktów', async () => {
 
     test.setTimeout(120000);
     

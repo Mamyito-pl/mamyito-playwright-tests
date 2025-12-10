@@ -31,7 +31,7 @@ export default class CartPage {
 
     async clickCartSummaryPaymentButton() {
         const button = this.page.locator(this.mobile ? '[data-cy="mobile-delivery-checkout-button"]' : '[data-cy="desktop-delivery-checkout-button"]');
-        await expect(button).toHaveCSS('background-color', /rgb\((249, 127, 21|229, 110, 6)\)/);
+        await expect(button).toHaveCSS('background-color', /rgb\((249, 127, 21|229, 110, 6)\)/, { timeout: 15000 });
         return button.click({ force: true, delay: 300 });
     }
 

@@ -411,7 +411,7 @@ test.describe('Testy szczegółów produktu', async () => {
 
     const mainInfoContent = productDetailsPage.getPackagingInfoDropdown.locator('..').locator('..').locator('div[class*="MuiCollapse-entered"]');
 
-    await expect(mainInfoContent).toHaveText('Pojemność: ' + productGrammar);
+    await expect(mainInfoContent).toHaveText('Objętość: ' + productGrammar);
   })
                 
   test('M | Możliwość przejścia do strony marki z informacji głównych produktu', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, baseURL, searchProduct }) => {

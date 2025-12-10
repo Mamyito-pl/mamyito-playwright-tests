@@ -8,6 +8,7 @@ import * as selectors from '../../utils/selectors.json';
 import { test } from '../../fixtures/fixtures.ts';
 import * as utility from '../../utils/utility-methods';
 import CommonPage from '../../page/Common.page.ts';
+import MenuCategoriesPage from '../../page/MenuCategories.page.ts';
 
 test.describe.configure({ mode: 'serial'})
 
@@ -21,6 +22,7 @@ test.describe('Testy koszyka', async () => {
   let searchbarPage : SearchbarPage;
   let commonPage: CommonPage;
   let product: string = 'janex polędwica wołowa';
+  let menuCategoriesPage: MenuCategoriesPage;
 
   test.beforeEach(async ({ page }) => {
 
@@ -39,6 +41,7 @@ test.describe('Testy koszyka', async () => {
     productsListPage = new ProductsListPage(page);
     searchbarPage = new SearchbarPage(page);
     commonPage = new CommonPage(page);
+    menuCategoriesPage = new MenuCategoriesPage(page);
   })
 
   test.afterEach(async ({ clearCartViaAPI }) => {
@@ -202,7 +205,7 @@ test.describe('Testy koszyka', async () => {
     await cartPage.clickCartDrawerButton();
     await page.waitForTimeout(500);
     await expect(cartPage.getCartDrawer).toBeVisible();
-    await searchbarPage.clickSearchbar();
+    await menuCategoriesPage.clickMenuCategoriesButton();
     await expect(cartPage.getCartDrawer).toBeHidden();
   })
 

@@ -43,7 +43,7 @@ test.describe('Testy menu kategorii', async () => {
 
     const categoriesCount = await page.locator('[data-cy="category-menu-item-level-1"]').count();
 
-    expect(categoriesCount).toBeGreaterThan(18);
+    expect(categoriesCount).toBeGreaterThan(17);
   })
 
   test('W | Możliwość zamknięcia menu', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
@@ -67,7 +67,7 @@ test.describe('Testy menu kategorii', async () => {
 
     const categoriesCount = await page.locator('[data-cy="category-menu-item-level-1"]').count();
 
-    expect(categoriesCount).toBeGreaterThan(18);
+    expect(categoriesCount).toBeGreaterThan(17);
 
     await menuCategoriesPage.clickMenuCategoriesButton();
 

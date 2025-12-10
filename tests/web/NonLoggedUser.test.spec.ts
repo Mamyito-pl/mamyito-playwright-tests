@@ -66,13 +66,13 @@ test.describe('Testy niezalogowanego użytkownika', async () => {
     await expect(nonLoggedUserPage.getDeliveryAvailableLink).toBeVisible();
     await expect(nonLoggedUserPage.getLoginLink).toBeVisible();
     await expect(nonLoggedUserPage.getRegisterLink).toBeVisible();
+    await expect(mainPage.getAboutDeliveryButton).toBeVisible();
 
     await expect(menuCategoriesPage.getMenuCategoriesButton).toBeVisible();
     await expect(mainPage.getStrefaMamityButton).toBeVisible();
     await expect(mainPage.getDiscountsButton).toBeVisible();
     await expect(mainPage.getNewProductsButton).toBeVisible();
     await expect(mainPage.getBestsellersButton).toBeVisible();
-    await expect(mainPage.getAboutDeliveryButton).toBeVisible();
     await expect(mainPage.getPaymentMethodsButton).toBeVisible();
 
     await expect(mainPage.getBanerSlider).toBeVisible();

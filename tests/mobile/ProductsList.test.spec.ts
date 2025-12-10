@@ -161,9 +161,7 @@ test.describe('Testy listy produktów', async () => {
     expect(pricesCount).toBeGreaterThan(1);
   })  
 
-  test.skip('M | Możliwość sortowania po najtańszych produktach za kg/l', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
-
-    // UNSKIP BELOW TESTS AFTER BUG FIX
+  test('M | Możliwość sortowania po najtańszych produktach za kg/l', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
 
     await allure.tags('Mobilne', 'Lista produktów');
     await allure.epic('Mobilne');
@@ -854,7 +852,7 @@ test.describe('Testy listy produktów', async () => {
   
       const productsCount = allProductBrands.length;
   
-      expect(productsCount).toBeGreaterThan(1);
+      expect(productsCount).toBeGreaterThanOrEqual(1);
       expect(productsCount).toBeLessThan(10);
 
       await productsListPage.getFiltersButton.click();

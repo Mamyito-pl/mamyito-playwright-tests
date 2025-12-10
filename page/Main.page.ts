@@ -50,11 +50,11 @@ export default class MainPage {
     }
 
     get getAboutDeliveryButton() {
-        return this.page.locator(this.mobile ? 'div[data-sentry-element="AppContent"] [data-sentry-component="LandingMobileButtonsSection"] a[href="/o-dostawie/obszary-dostawy"]:has-text("O dostawie")' : 'header a[href="/o-dostawie/obszary-dostawy"]:has-text("O dostawie")')
+        return this.page.locator(this.mobile ? 'div[data-sentry-element="TabletContent"] [data-sentry-component="LandingMobileButtonsSection"] a[href="/o-dostawie/obszary-dostawy"]:has-text("O dostawie")' : 'div[data-sentry-element="WebContent"] a[href="/o-dostawie/obszary-dostawy"]:has-text("O dostawie")')
     }
 
     get getPaymentMethodsButton() {
-        return this.page.locator(this.mobile ? 'div[data-sentry-element="AppContent"] [data-sentry-component="LandingMobileButtonsSection"] a[href="/o-dostawie/metody-platnosci"]:has-text("Metody płatności")' : 'header a[href="/o-dostawie/metody-platnosci"]:has-text("Metody płatności")')
+        return this.page.locator(this.mobile ? 'div[data-sentry-element="TabletContent"] [data-sentry-component="LandingMobileButtonsSection"] a[href="/o-dostawie/metody-platnosci"]:has-text("Metody płatności")' : 'div[data-sentry-element="WebContent"] a[href="/o-dostawie/metody-platnosci"]:has-text("Metody płatności")')
     }
 
     get getBannersSection() {
@@ -78,7 +78,7 @@ export default class MainPage {
     }
 
     get getBannerUpperDown() {
-        return this.page.locator('div[data-sentry-element="BannersColumn"] a[href*="o-dostawie/koszty-dostawy"]');
+        return this.page.locator('div[data-sentry-element="BannersColumn"] a[href*="/dostawa"]');
     }
 
     get getDiscountsSection() {

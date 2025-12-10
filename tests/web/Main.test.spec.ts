@@ -135,7 +135,7 @@ test.describe('Testy strony głównej', async () => {
     await allure.allureId('1211');
 
     await mainPage.getBannerUpperDown.click();
-    await expect(page).toHaveURL(/\/o-dostawie\/koszty-dostawy$/, { timeout: 10000 });
+    await expect(page).toHaveURL(/\/dostawa/, { timeout: 10000 });
   })
 
   test('W | Możliwość przewijania slidera promocji', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {

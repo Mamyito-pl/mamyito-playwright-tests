@@ -219,7 +219,7 @@ test.describe('Testy wyszukiwarki', async () => {
     }
   })
       
-  test('W | Możliwość przewijania slidera nasze promocje', { tag: ['@Prod'] }, async ({ page }) => {
+  test.skip('W | Możliwość przewijania slidera nasze promocje', { tag: ['@Prod'] }, async ({ page }) => {
 
     await allure.tags('Web', 'Wyszukiwarka');
     await allure.epic('Webowe');

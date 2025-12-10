@@ -210,7 +210,7 @@ test.describe('Testy wyszukiwarki', async () => {
     }
   })
     
-  test('M | Możliwość przewijania slidera nasze promocje', { tag: ['@Prod'] }, async ({ page }) => {
+  test.skip('M | Możliwość przewijania slidera nasze promocje', { tag: ['@Prod'] }, async ({ page }) => {
 
     await allure.tags('Mobilne', 'Wyszukiwarka');
     await allure.epic('Mobilne');

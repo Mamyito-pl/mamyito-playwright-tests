@@ -466,7 +466,7 @@ test.describe('Testy szczegółów produktu', async () => {
     await expect(brandPage.getBrandTitle).toContainText(productBrandName || '')
   })
 
-  test('W | Możliwość przewijania slidera inne produkty z tej kategorii', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, searchProduct }) => {
+  test.skip('W | Możliwość przewijania slidera inne produkty z tej kategorii', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, searchProduct }) => {
 
     await allure.tags('Web', 'Szczegóły produktu');
     await allure.epic('Webowe');

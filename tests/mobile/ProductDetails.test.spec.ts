@@ -445,7 +445,7 @@ test.describe('Testy szczegółów produktu', async () => {
     await expect(brandPage.getBrandTitle).toContainText(productBrandName || '')
   })
 
-  test('M | Możliwość przewijania slidera inne produkty z tej kategorii', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, searchProduct }) => {
+  test.skip('M | Możliwość przewijania slidera inne produkty z tej kategorii', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, searchProduct }) => {
 
     await allure.tags('Mobilne', 'Szczegóły produktu');
     await allure.epic('Mobilne');

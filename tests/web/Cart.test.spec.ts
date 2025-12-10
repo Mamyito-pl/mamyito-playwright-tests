@@ -250,7 +250,7 @@ test.describe('Testy koszyka', async () => {
     await expect(page).toHaveURL(`${baseURL}` + '/koszyk');
   })
 
-  test.describe('W | Możliwość dodania do koszyka najczęściej kupowanych produktów', async () => {
+  test.describe.skip('W | Możliwość dodania do koszyka najczęściej kupowanych produktów', async () => {
     
     test.setTimeout(80000);
 

@@ -17,16 +17,17 @@ Follow the steps below to prepare the project and run Playwright tests locally.
    `$env:PASSWORD="yourpassword"`
 
    `$env:URL="yourapiurl"`
-   
+
    `$env:APIURL="yoururl"`
+
 
 ### Run smoke tests for chromium web
 
-   `npx playwright test --max-failures=0 --project="chromium" --grep "@Smoke"`
+   `npx playwright test --max-failures=0 --project="chromium" --retries=2 --grep "@Smoke"`
 
 ### Run smoke tests for chromium mobile
 
-   `npx playwright test --max-failures=0 --project="Mobile Chrome" --grep "@Smoke"`
+   `npx playwright test --max-failures=0 --project="Mobile Chrome" --retries=2 --grep "@Smoke"`
 
 ### Run regression tests for chromium web on BETA
 

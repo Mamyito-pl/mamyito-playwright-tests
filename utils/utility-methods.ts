@@ -117,3 +117,40 @@ export async function addTestParam(page: Page, param = 'testy-automatyczne') {
     await page.goto(newUrl, { waitUntil: 'domcontentloaded' });
   }
 }
+
+export async function scrollIntoViewWithRetry(
+  page: Page, 
+  selector: string, 
+  options: {
+    retries?: number;
+    timeout?: number;
+    waitBetweenRetries?: number;
+    logErrors?: boolean;
+  } = {}
+) {
+  const {
+    retries = 3,
+    timeout = 5000,
+    waitBetweenRetries = 1000,
+    logErrors = true
+  } = options;
+
+  for (let i = 0; i < retries; i++) {
+    try {
+      const locator = page.getByText(selector);
+      await locator.waitFor({ timeout });
+      await locator.scrollIntoViewIfNeeded();
+      return; // Sukces - wyjdź z funkcji
+    } catch (error) {
+      if (logErrors) {
+        console.log(`Próba ${i + 1}/${retries} scrollowania do "${selector}" nie powiodła się:`, error.message);
+      }
+      
+      if (i === retries - 1) {
+        throw new Error(`Nie udało się przescrollować do elementu "${selector}" po ${retries} próbach. Ostatni błąd: ${error.message}`);
+      }
+      
+      await page.waitForTimeout(waitBetweenRetries);
+    }
+  }
+}

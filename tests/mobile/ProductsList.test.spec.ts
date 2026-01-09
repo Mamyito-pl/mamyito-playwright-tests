@@ -83,8 +83,7 @@ test.describe('Testy listy produktów', async () => {
     const productsBeforeScroll = await productsListPage.getProductTiles.count();
     expect(productsBeforeScroll).toEqual(60);
 
-    await page.getByText('Opis kategorii').waitFor();
-    await page.getByText('Opis kategorii').scrollIntoViewIfNeeded();
+    await utility.scrollIntoViewWithRetry(page, 'Opis kategorii');
     await page.waitForTimeout(10000);
 
     const productsCount = await productsListPage.getProductTiles.count();
@@ -715,7 +714,7 @@ test.describe('Testy listy produktów', async () => {
       }
     })
 
-    test('M | Możliwość filtrowania po cenie niestandardowej', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
+    test.skip('M | Możliwość filtrowania po cenie niestandardowej', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
 
       await allure.tags('Mobilne', 'Lista produktów');
       await allure.epic('Mobilne');

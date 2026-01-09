@@ -51,6 +51,12 @@ export default class PaymentsPage {
       }
     }
 
+    async waitForLoader() {
+      if (await this.getLoaderPaymentsPage.isVisible({ timeout: 5000 })) {
+        await expect(this.getLoaderPaymentsPage).toBeHidden({ timeout: 10000 });
+      }
+    }
+
     get getLoaderPaymentsPage() {
         return this.page.locator('[data-sentry-element="PaymentSection"] svg[class*="MuiCircularProgress-svg"]');
     }

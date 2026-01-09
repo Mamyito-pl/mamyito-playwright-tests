@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import CommonPage from "../../page/Common.page.ts";
 import DeliveryPage from '../../page/Delivery.page.ts';
+import PaymentsPage from '../../page/Payments.page.ts';
 import * as allure from "allure-js-commons";
 import * as selectors from '../../utils/selectors.json';
 import { test } from '../../fixtures/fixtures.ts';
@@ -12,6 +13,7 @@ test.describe('Testy dostawy', async () => {
 
   let commonPage: CommonPage;
   let deliveryPage : DeliveryPage;
+  let paymentsPage : PaymentsPage;
 
   test.beforeEach(async ({ page }) => {
 
@@ -23,6 +25,7 @@ test.describe('Testy dostawy', async () => {
 
     commonPage = new CommonPage(page);
     deliveryPage = new DeliveryPage(page);
+    paymentsPage = new PaymentsPage(page);
   })
 
   test.afterEach(async ({ deleteDeliveryAddressViaAPI, deleteInvoiceAddressViaAPI }) => {
@@ -422,6 +425,8 @@ test.describe('Testy dostawy', async () => {
 
       await page.waitForSelector('text="Chcę otrzymać fakturę"', { timeout: 30000, state: 'visible' });
 
+      await paymentsPage.waitForLoader();
+
       const checkbox = deliveryPage.getDeliveryInvoiceCheckbox;
       let attempts = 0;
       const maxAttempts = 3;
@@ -733,6 +738,8 @@ test.describe('Testy dostawy', async () => {
       await expect(page.getByText('Potrzebujesz faktury do zamówienia?')).toBeVisible({ timeout: 10000 });
 
       await page.waitForSelector('text="Chcę otrzymać fakturę"', { timeout: 30000, state: 'visible' });
+
+      await paymentsPage.waitForLoader();
 
       const checkbox = deliveryPage.getDeliveryInvoiceCheckbox;
       let attempts = 0;

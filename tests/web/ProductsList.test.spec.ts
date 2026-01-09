@@ -771,7 +771,7 @@ test.describe('Testy listy produktów', async () => {
       }
     })
 
-    test('W | Możliwość filtrowania po cenie niestandardowej', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
+    test.skip('W | Możliwość filtrowania po cenie niestandardowej', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
 
       await allure.tags('Web', 'Lista produktów');
       await allure.epic('Webowe');

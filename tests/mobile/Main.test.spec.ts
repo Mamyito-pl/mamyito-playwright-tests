@@ -57,11 +57,11 @@ test.describe('Testy strony głównej', async () => {
 
     await page.evaluate(async () => {
       window.scrollBy(0, 1000)
-      await new Promise(r => setTimeout(r, 700));
+      await new Promise(r => setTimeout(r, 1500));
       window.scrollBy(0, 1000)
-      await new Promise(r => setTimeout(r, 700));
+      await new Promise(r => setTimeout(r, 1500));
       window.scrollBy(0, 1000)
-      await new Promise(r => setTimeout(r, 700));
+      await new Promise(r => setTimeout(r, 1500));
     })
 
     await expect(mainPage.getLogo).toBeVisible();
@@ -111,7 +111,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(mainPage.getNewsletterCheckbox).toBeVisible();
   })
 
-  test.skip('M | Możliwość przewijania slidera promocji', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
+  test('M | Możliwość przewijania slidera promocji', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
 
     await allure.tags('Mobilne', 'Strona główna');
     await allure.epic('Mobilne');
@@ -145,7 +145,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(page.locator('div[data-sentry-element="TitleMobile"]:has-text("Promocje")')).toBeVisible({ timeout: 10000 });
   })
   
-  test.skip('M | Możliwość przewijania slidera bestsellery', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, browser }) => {
+  test('M | Możliwość przewijania slidera bestsellery', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, browser }) => {
 
     await allure.tags('Mobilne', 'Strona główna');
     await allure.epic('Mobilne');
@@ -159,7 +159,7 @@ test.describe('Testy strony głównej', async () => {
     if (project === 'webkit') {
       await page.evaluate(async () => {
         window.scrollBy(0, 650)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
       });
     } else {
       await page.mouse.wheel(0, 600);
@@ -194,7 +194,7 @@ test.describe('Testy strony głównej', async () => {
     if (project === 'webkit') {
       await page.evaluate(async () => {
         window.scrollBy(0, 700)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
       });
     } else {
       await page.mouse.wheel(0, 600);
@@ -209,7 +209,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(productsListPage.getSpecialProductCategoryTitle('Nasze bestsellery')).toBeVisible({ timeout: 10000 });
   })
     
-  test.skip('M | Możliwość przewijania slidera kategorii', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, browser }) => {
+  test('M | Możliwość przewijania slidera kategorii', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, browser }) => {
 
     await allure.tags('Mobilne', 'Strona główna');
     await allure.epic('Mobilne');
@@ -223,9 +223,9 @@ test.describe('Testy strony głównej', async () => {
     if (project === 'webkit') {
       await page.evaluate(async () => {
         window.scrollBy(0, 1250)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
         window.scrollBy(0, 300)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
       });
     } else {
       await page.mouse.wheel(0, 1200);
@@ -262,9 +262,9 @@ test.describe('Testy strony głównej', async () => {
     if (project === 'webkit') {
       await page.evaluate(async () => {
         window.scrollBy(0, 1250)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
         window.scrollBy(0, 300)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
       });
     } else {
       await page.mouse.wheel(0, 1200);
@@ -295,9 +295,9 @@ test.describe('Testy strony głównej', async () => {
     if (project === 'webkit') {
       await page.evaluate(async () => {
         window.scrollBy(0, 1250)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
         window.scrollBy(0, 300)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
       });
     } else {
       await page.mouse.wheel(0, 1200);
@@ -319,7 +319,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(page.locator(`div[data-sentry-element="TitleMobile"]:has-text("${modifiedItemName}")`)).toBeVisible({ timeout: 10000 });
   })
 
-  test.skip('M | Możliwość przewijania slidera nowości', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, browser }) => {
+  test('M | Możliwość przewijania slidera nowości', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, browser }) => {
 
     await allure.tags('Mobilne', 'Strona główna');
     await allure.epic('Mobilne');
@@ -333,9 +333,9 @@ test.describe('Testy strony głównej', async () => {
     if (project === 'webkit') {
       await page.evaluate(async() => {
         window.scrollBy(0, 1550)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
         window.scrollBy(0, 700)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
       });
     } else {
       await page.mouse.wheel(0, 1500);
@@ -372,9 +372,9 @@ test.describe('Testy strony głównej', async () => {
     if (project === 'webkit') {
       await page.evaluate(async () => {
         window.scrollBy(0, 1550)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
         window.scrollBy(0, 500)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
       });
     } else {
       await page.mouse.wheel(0, 1500);
@@ -391,7 +391,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(productsListPage.getSpecialProductCategoryTitle('Nowości')).toBeVisible({ timeout: 10000 });
   })
 
-  test.skip('M | Możliwość przewijania slidera najczęściej kupowanych produktów', { tag: ['@Prod', '@Test'] }, async ({ page, browser }) => {
+  test('M | Możliwość przewijania slidera najczęściej kupowanych produktów', { tag: ['@Prod', '@Test'] }, async ({ page, browser }) => {
 
     await allure.tags('Mobilne', 'Strona główna');
     await allure.epic('Mobilne');
@@ -405,9 +405,9 @@ test.describe('Testy strony głównej', async () => {
     if (project === 'webkit') {
       await page.evaluate(async () => {
         window.scrollBy(0, 1850)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
         window.scrollBy(0, 1200)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
       });
     } else {
       await page.mouse.wheel(0, 1550);
@@ -442,9 +442,9 @@ test.describe('Testy strony głównej', async () => {
     if (project === 'webkit') {
       await page.evaluate(async () => {
         window.scrollBy(0, 1850)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
         window.scrollBy(0, 1200)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
       });
     } else {
       await page.mouse.wheel(0, 1550);
@@ -548,9 +548,9 @@ test.describe('Testy strony głównej', async () => {
     if (project === 'webkit') {
       await page.evaluate(async () => {
         window.scrollBy(0, 1550)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
         window.scrollBy(0, 1700)
-        await new Promise(r => setTimeout(r, 700));
+        await new Promise(r => setTimeout(r, 1500));
       });
     } else {
       await page.mouse.wheel(0, 1500);

@@ -192,13 +192,31 @@ export const test = baseTest.extend<MyFixtures>({
       const newsletterSignOutResponse = await request.post(`${process.env.APIURL}/api/newsletter/sign-out`, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Accept': 'application/json',
         },
           data: {
             email: `${process.env.EMAIL}`,
           },
       });
 
-      expect(newsletterSignOutResponse.ok()).toBeTruthy();
+      const status = newsletterSignOutResponse.status();
+      
+      if (status === 204) {
+        const responseBody = await newsletterSignOutResponse.text();
+        expect(responseBody).toBe('');
+      } else if (status === 422) {
+        const responseBody = await newsletterSignOutResponse.json();
+        expect(responseBody).toEqual({
+          "message": "Podany email nie jest zapisany do newslettera",
+          "errors": {
+            "email": [
+              "Podany email nie jest zapisany do newslettera"
+            ]
+          }
+        });
+      } else {
+        throw new Error(`Nieoczekiwany status odpowiedzi: ${status}. Oczekiwano 204 lub 422.`);
+      }
     };
     
     await use(newsletterSignOutViaAPI);

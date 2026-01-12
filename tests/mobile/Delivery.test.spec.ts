@@ -331,6 +331,10 @@ test.describe('Testy dostawy', async () => {
 
       await expect(page.getByText('Potrzebujesz faktury do zamówienia?')).toBeVisible({ timeout: 10000 });
 
+      await page.waitForSelector('text="Chcę otrzymać fakturę"', { timeout: 30000, state: 'visible' });
+
+      await paymentsPage.waitForLoader();
+
       const checkbox = deliveryPage.getDeliveryInvoiceCheckbox;
       let attempts = 0;
       const maxAttempts = 3;
@@ -475,6 +479,10 @@ test.describe('Testy dostawy', async () => {
 
       await expect(page.getByText('Potrzebujesz faktury do zamówienia?')).toBeVisible({ timeout: 10000 });
 
+      await page.waitForSelector('text="Chcę otrzymać fakturę"', { timeout: 30000, state: 'visible' });
+
+      await paymentsPage.waitForLoader();
+
       const checkbox = deliveryPage.getDeliveryInvoiceCheckbox;
       let attempts = 0;
       const maxAttempts = 3;
@@ -582,6 +590,10 @@ test.describe('Testy dostawy', async () => {
 
       await expect(page.getByText('Potrzebujesz faktury do zamówienia?')).toBeVisible({ timeout: 10000 });
 
+      await page.waitForSelector('text="Chcę otrzymać fakturę"', { timeout: 30000, state: 'visible' });
+
+      await paymentsPage.waitForLoader();
+
       const checkbox = deliveryPage.getDeliveryInvoiceCheckbox;
       let attempts = 0;
       const maxAttempts = 3;
@@ -649,6 +661,10 @@ test.describe('Testy dostawy', async () => {
       await page.goto('/platnosc');
 
       await expect(page.getByText('Potrzebujesz faktury do zamówienia?')).toBeVisible({ timeout: 10000 });
+
+      await page.waitForSelector('text="Chcę otrzymać fakturę"', { timeout: 30000, state: 'visible' });
+
+      await paymentsPage.waitForLoader();
 
       const checkbox = deliveryPage.getDeliveryInvoiceCheckbox;
       let attempts = 0;
@@ -784,6 +800,10 @@ test.describe('Testy dostawy', async () => {
 
       await expect(page.getByText('Potrzebujesz faktury do zamówienia?')).toBeVisible({ timeout: 10000 });
 
+      await page.waitForSelector('text="Chcę otrzymać fakturę"', { timeout: 30000, state: 'visible' });
+
+      await paymentsPage.waitForLoader();
+
       const checkbox = deliveryPage.getDeliveryInvoiceCheckbox;
       let attempts = 0;
       const maxAttempts = 3;
@@ -889,6 +909,10 @@ test.describe('Testy dostawy', async () => {
       await page.goto('/platnosc');
 
       await expect(page.getByText('Potrzebujesz faktury do zamówienia?')).toBeVisible({ timeout: 10000 });
+
+      await page.waitForSelector('text="Chcę otrzymać fakturę"', { timeout: 30000, state: 'visible' });
+
+      await paymentsPage.waitForLoader();
 
       const checkbox = deliveryPage.getDeliveryInvoiceCheckbox;
       let attempts = 0;

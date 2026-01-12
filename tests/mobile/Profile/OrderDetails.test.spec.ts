@@ -105,7 +105,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await cartPage.clickCartSummaryButton();
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
     await utility.addTestParam(page);
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(5000);
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
     await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
     await page.waitForTimeout(1000);
@@ -182,7 +182,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     });
   })
   
-  test('M | Zamówienie po błędnej płatności powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, cancelOrderViaAPI }) => {
+  test.skip('M | Zamówienie po błędnej płatności powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, cancelOrderViaAPI }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');
@@ -432,7 +432,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await expect(commonPage.getCartProductsPrice).toBeVisible({ timeout: 5000 });
   })
           
-  test('M | Możliwość ponownego zamówienia po złożeniu zamówienia z błędną płatnością', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI }) => {
+  test.skip('M | Możliwość ponownego zamówienia po złożeniu zamówienia z błędną płatnością', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');

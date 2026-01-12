@@ -532,7 +532,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(favouritesPage.getFavouritesProductsTitle).toBeVisible({ timeout: 15000 });
   })
 
-  test('M | Możliwość zapisania się do newslettera', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, browser }) => {
+  test('M | Możliwość zapisania się do newslettera', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, browser, newsletterSignOutViaAPI }) => {
 
     await allure.tags('Mobilne', 'Strona główna');
     await allure.epic('Mobilne');
@@ -544,6 +544,8 @@ test.describe('Testy strony głównej', async () => {
     const userEmail = `${process.env.EMAIL}`
 
     const project = browser.browserType().name();
+
+    await newsletterSignOutViaAPI();
 
     if (project === 'webkit') {
       await page.evaluate(async () => {

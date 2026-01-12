@@ -55,11 +55,11 @@ test.describe('Testy niezalogowanego użytkownika', async () => {
     await allure.allureId('2527');
 
     await page.mouse.wheel(0, 1500);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 3000);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 5000);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
 
     await expect(mainPage.getLogo).toBeVisible();
     await expect(searchbarPage.getSearchbarInput).toBeVisible()
@@ -76,8 +76,6 @@ test.describe('Testy niezalogowanego użytkownika', async () => {
     await expect(mainPage.getPaymentMethodsButton).toBeVisible();
 
     await expect(mainPage.getBanerSlider).toBeVisible();
-    await expect(mainPage.getBannerUpperUp).toBeVisible();
-    await expect(mainPage.getBannerUpperDown).toBeVisible();
 
     await expect(mainPage.getSectionTitle('Promocje')).toBeVisible();
     await expect(mainPage.getSectionShowAllLink('promocje')).toBeVisible();

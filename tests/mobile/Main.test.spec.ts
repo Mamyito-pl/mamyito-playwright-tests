@@ -62,6 +62,8 @@ test.describe('Testy strony głównej', async () => {
       await new Promise(r => setTimeout(r, 1500));
       window.scrollBy(0, 1000)
       await new Promise(r => setTimeout(r, 1500));
+      window.scrollBy(0, 1000)
+      await new Promise(r => setTimeout(r, 1500));
     })
 
     await expect(mainPage.getLogo).toBeVisible();

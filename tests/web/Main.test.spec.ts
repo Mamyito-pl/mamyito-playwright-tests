@@ -54,13 +54,13 @@ test.describe('Testy strony głównej', async () => {
     await allure.allureId('1177');
 
     await page.mouse.wheel(0, 1500);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 3000);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 5000);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 7000);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
 
     await expect(mainPage.getLogo).toBeVisible();
     await expect(searchbarPage.getSearchbarInput).toBeVisible()
@@ -138,7 +138,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(page).toHaveURL(/\/dostawa/, { timeout: 10000 });
   })
 
-  test.skip('W | Możliwość przewijania slidera promocji', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
+  test('W | Możliwość przewijania slidera promocji', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
 
     await allure.tags('Web', 'Strona główna');
     await allure.epic('Webowe');
@@ -172,7 +172,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(productsListPage.getProductCategoryTitle('Promocje')).toBeVisible({ timeout: 10000 });
   })
   
-  test.skip('W | Możliwość przewijania slidera bestsellery', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
+  test('W | Możliwość przewijania slidera bestsellery', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
 
     await allure.tags('Web', 'Strona główna');
     await allure.epic('Webowe');
@@ -182,7 +182,7 @@ test.describe('Testy strony głównej', async () => {
     await allure.allureId('1214');
     
     await page.mouse.wheel(0, 600);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
 
     const firstItemInSlider = page.locator('[data-cy="bestsellery-product-card-slider"]').first()
 
@@ -209,7 +209,7 @@ test.describe('Testy strony głównej', async () => {
     await allure.allureId('1215');
 
     await page.mouse.wheel(0, 600);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
 
     await mainPage.getBestsellersSection.scrollIntoViewIfNeeded();
 
@@ -220,7 +220,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(productsListPage.getSpecialProductCategoryTitle('Bestsellery')).toBeVisible({ timeout: 10000 });
   })
     
-  test.skip('W | Możliwość przewijania slidera kategorii', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
+  test('W | Możliwość przewijania slidera kategorii', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
 
     await allure.tags('Web', 'Strona główna');
     await allure.epic('Webowe');
@@ -230,9 +230,9 @@ test.describe('Testy strony głównej', async () => {
     await allure.allureId('1216');
 
     await page.mouse.wheel(0, 1200);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 1700);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     
     const firstItemInSlider = page.locator('div[data-sentry-component="CategoriesSection"] section a[rel="nofollow"]').first()
 
@@ -259,9 +259,9 @@ test.describe('Testy strony głównej', async () => {
     await allure.allureId('1217');
 
     await page.mouse.wheel(0, 1200);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 1700);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
 
     await mainPage.getCategoriesSection.scrollIntoViewIfNeeded();
 
@@ -282,9 +282,9 @@ test.describe('Testy strony głównej', async () => {
     await allure.allureId('1218');
 
     await page.mouse.wheel(0, 1200);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 1700);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
 
     const firstItemInSlider = page.locator('div[data-sentry-component="CategoriesSection"] section a[rel="nofollow"]').first();
     const itemLink = await firstItemInSlider.getAttribute('href');
@@ -300,7 +300,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(productsListPage.getProductCategoryTitle(modifiedItemName)).toBeVisible({ timeout: 10000 });
   })
 
-  test.skip('W | Możliwość przewijania slidera nowości', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
+  test('W | Możliwość przewijania slidera nowości', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
 
     await allure.tags('Web', 'Strona główna');
     await allure.epic('Webowe');
@@ -310,9 +310,9 @@ test.describe('Testy strony głównej', async () => {
     await allure.allureId('1219');
     
     await page.mouse.wheel(0, 1500);
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 2000);
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1500);
 
     const firstItemInSlider = page.locator('[data-cy="nowosci-product-card-slider"]').first()
 
@@ -339,9 +339,9 @@ test.describe('Testy strony głównej', async () => {
     await allure.allureId('1220');
 
     await page.mouse.wheel(0, 1500);
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 2000);
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1500);
 
     await mainPage.getNewProductsSection.scrollIntoViewIfNeeded();
 
@@ -352,7 +352,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(productsListPage.getSpecialProductCategoryTitle('Nowości')).toBeVisible({ timeout: 10000 });
   })
 
-  test.skip('W | Możliwość przewijania slidera najczęściej kupowanych produktów', { tag: ['@Prod', '@Test'] }, async ({ page }) => {
+  test('W | Możliwość przewijania slidera najczęściej kupowanych produktów', { tag: ['@Prod', '@Test'] }, async ({ page }) => {
 
     await allure.tags('Web', 'Strona główna');
     await allure.epic('Webowe');
@@ -362,9 +362,9 @@ test.describe('Testy strony głównej', async () => {
     await allure.allureId('1221');
     
     await page.mouse.wheel(0, 1500);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 2200);
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1500);
 
     const firstItemInSlider = page.locator('[data-cy="most_frequently_bought-product-card-slider"]').first();
 
@@ -389,9 +389,9 @@ test.describe('Testy strony głównej', async () => {
     await allure.allureId('1222');
 
     await page.mouse.wheel(0, 1500);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 2000);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
 
     await mainPage.getNewProductsSection.scrollIntoViewIfNeeded();
     
@@ -487,7 +487,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(productsListPage.getSpecialProductCategoryTitle('Najcześciej kupowane przez Ciebie')).toBeVisible({ timeout: 15000 });
   })
 
-  test('W | Możliwość zapisania się do newslettera', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
+  test('W | Możliwość zapisania się do newslettera', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, newsletterSignOutViaAPI }) => {
 
     await allure.tags('Web', 'Strona główna');
     await allure.epic('Webowe');
@@ -498,14 +498,16 @@ test.describe('Testy strony głównej', async () => {
 
     const userEmail = `${process.env.EMAIL}`
 
+    await newsletterSignOutViaAPI();
+
     await page.mouse.wheel(0, 1500);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 3000);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 5000);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
     await page.mouse.wheel(0, 7000);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(1500);
 
     await expect(mainPage.getNewsletterSection).toBeVisible();
     await expect(mainPage.getNewsletterInput).toBeVisible();

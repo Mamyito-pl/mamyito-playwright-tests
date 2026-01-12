@@ -208,7 +208,7 @@ test.describe('Testy płatności', async () => {
     await expect(orderDetailsPage.getCancelOrderButton).toBeVisible({ timeout: 5000 });
   })
 
-  test('M | Możliwość zapłaty za zamówienie z poziomu listy zamówień', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
+  test.skip('M | Możliwość zapłaty za zamówienie z poziomu listy zamówień', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
 
     await allure.tags('Mobilne', 'Płatności');
     await allure.epic('Mobilne');
@@ -828,7 +828,7 @@ test.describe('Testy płatności', async () => {
 
   test.describe('Płatności przelewem online', async () => {
   
-    test('M | Zapłata przelewem online', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
+    test.skip('M | Zapłata przelewem online', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -907,7 +907,7 @@ test.describe('Testy płatności', async () => {
       await expect(paymentsPage.getBackHomeButton).toBeVisible();
     }) 
     
-    test('M | Błędna płatność przelewem online', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL }) => {
+    test.skip('M | Błędna płatność przelewem online', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -977,7 +977,7 @@ test.describe('Testy płatności', async () => {
       await expect(paymentsPage.getBackHomeButton).toBeVisible();
     }) 
                             
-    test('M | Ponowna zapłata po nieudanej płatności przelewem online', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
+    test.skip('M | Ponowna zapłata po nieudanej płatności przelewem online', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');

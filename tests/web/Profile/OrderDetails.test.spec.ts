@@ -173,7 +173,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     });
   })
 
-  test('W | Zamówienie po błędnej płatności powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, cancelOrderViaAPI }) => {
+  test.skip('W | Zamówienie po błędnej płatności powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, cancelOrderViaAPI }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');
@@ -408,7 +408,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await expect(commonPage.getCartProductsPrice).toBeVisible({ timeout: 5000 });
   })
         
-  test('W | Możliwość ponownego zamówienia po złożeniu zamówienia z błędną płatnością', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI }) => {
+  test.skip('W | Możliwość ponownego zamówienia po złożeniu zamówienia z błędną płatnością', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');

@@ -224,7 +224,11 @@ test.describe('Testy strony głównej', async () => {
 
     if (project === 'webkit') {
       await page.evaluate(async () => {
-        window.scrollBy(0, 1250)
+        window.scrollBy(0, 950)
+        await new Promise(r => setTimeout(r, 1500));
+        window.scrollBy(0, 350)
+        await new Promise(r => setTimeout(r, 1500));
+        window.scrollBy(0, 300)
         await new Promise(r => setTimeout(r, 1500));
         window.scrollBy(0, 300)
         await new Promise(r => setTimeout(r, 1500));
@@ -263,7 +267,11 @@ test.describe('Testy strony głównej', async () => {
 
     if (project === 'webkit') {
       await page.evaluate(async () => {
-        window.scrollBy(0, 1250)
+        window.scrollBy(0, 950)
+        await new Promise(r => setTimeout(r, 1500));
+        window.scrollBy(0, 350)
+        await new Promise(r => setTimeout(r, 1500));
+        window.scrollBy(0, 300)
         await new Promise(r => setTimeout(r, 1500));
         window.scrollBy(0, 300)
         await new Promise(r => setTimeout(r, 1500));
@@ -296,7 +304,11 @@ test.describe('Testy strony głównej', async () => {
 
     if (project === 'webkit') {
       await page.evaluate(async () => {
-        window.scrollBy(0, 1250)
+        window.scrollBy(0, 950)
+        await new Promise(r => setTimeout(r, 1500));
+        window.scrollBy(0, 350)
+        await new Promise(r => setTimeout(r, 1500));
+        window.scrollBy(0, 300)
         await new Promise(r => setTimeout(r, 1500));
         window.scrollBy(0, 300)
         await new Promise(r => setTimeout(r, 1500));

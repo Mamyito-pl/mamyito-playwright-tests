@@ -219,7 +219,7 @@ export default class ProductsListPage {
     }
 
     get getSortButton() {
-        return this.page.locator(this.mobile ? `button:has-text('Sortuj')` : `div[data-sentry-element="SortingInputWrapper"]`);
+        return this.page.locator(this.mobile ? `button:has-text('Sortuj')` : `div[data-sentry-element="SortingInputWrapper"] [data-sentry-component="SelectDropdown"]`);
     }
 
     get getFilterButton() {

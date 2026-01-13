@@ -51,6 +51,8 @@ test.describe('Testy kategorii produktów', async () => {
     await allure.subSuite('');
     await allure.allureId('824');
 
+    await page.waitForTimeout(2000);
+
     const warzywaOwoceLink = page.locator('a[href="/warzywa-i-owoce"]').last();
 
     expect(warzywaOwoceLink).toContainText('Zobacz wszystkie');
@@ -70,6 +72,8 @@ test.describe('Testy kategorii produktów', async () => {
     await allure.suite('Testy kategorii produktów');
     await allure.subSuite('');
     await allure.allureId('825');
+
+    await page.waitForTimeout(2000);
 
     const warzywaOwoceSubCategoryLink = page.locator('a[href="/warzywa-i-owoce/owoce"] h3');
 

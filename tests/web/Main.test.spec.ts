@@ -311,7 +311,7 @@ test.describe('Testy strony głównej', async () => {
     
     await page.mouse.wheel(0, 1500);
     await page.waitForTimeout(1500);
-    await page.mouse.wheel(0, 2000);
+    await page.mouse.wheel(0, 1200);
     await page.waitForTimeout(1500);
 
     const firstItemInSlider = page.locator('[data-cy="nowosci-product-card-slider"]').first()
@@ -340,7 +340,7 @@ test.describe('Testy strony głównej', async () => {
 
     await page.mouse.wheel(0, 1500);
     await page.waitForTimeout(1500);
-    await page.mouse.wheel(0, 2000);
+    await page.mouse.wheel(0, 1200);
     await page.waitForTimeout(1500);
 
     await mainPage.getNewProductsSection.scrollIntoViewIfNeeded();

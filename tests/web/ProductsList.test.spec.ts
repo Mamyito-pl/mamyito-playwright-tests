@@ -181,7 +181,7 @@ test.describe('Testy listy produktów', async () => {
     await utility.gotoWithoutParameter(page, '/nabial/mleko-i-napoje-mleczne');
     await page.waitForLoadState('domcontentloaded');
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
     const breadcrumb = page.locator('a[data-cy="category-tag"]').first().getByText('Strefa Niskich Cen');
     await expect(breadcrumb).toBeVisible({ timeout: 20000 });
@@ -220,7 +220,7 @@ test.describe('Testy listy produktów', async () => {
     await utility.gotoWithoutParameter(page, '/nabial/mleko-i-napoje-mleczne');
     await page.waitForLoadState('domcontentloaded');
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
     const breadcrumb = page.locator('a[data-cy="category-tag"]').first().getByText('Strefa Niskich Cen');
     await expect(breadcrumb).toBeVisible({ timeout: 20000 });
@@ -259,7 +259,7 @@ test.describe('Testy listy produktów', async () => {
     await utility.gotoWithoutParameter(page, '/nabial/mleko-i-napoje-mleczne');
     await page.waitForLoadState('domcontentloaded');
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
     const breadcrumb = page.locator('a[data-cy="category-tag"]').first().getByText('Strefa Niskich Cen');
     await expect(breadcrumb).toBeVisible({ timeout: 20000 });
@@ -301,7 +301,7 @@ test.describe('Testy listy produktów', async () => {
     await utility.gotoWithoutParameter(page, '/nabial/mleko-i-napoje-mleczne');
     await page.waitForLoadState('domcontentloaded');
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
     const breadcrumb = page.locator('a[data-cy="category-tag"]').first().getByText('Strefa Niskich Cen');
     await expect(breadcrumb).toBeVisible({ timeout: 20000 });
@@ -341,7 +341,7 @@ test.describe('Testy listy produktów', async () => {
     await utility.gotoWithoutParameter(page, '/nabial/mleko-i-napoje-mleczne');
     await page.waitForLoadState('domcontentloaded');
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
     const breadcrumb = page.locator('a[data-cy="category-tag"]').first().getByText('Strefa Niskich Cen');
     await expect(breadcrumb).toBeVisible({ timeout: 20000 });
@@ -458,7 +458,7 @@ test.describe('Testy listy produktów', async () => {
     await utility.gotoWithoutParameter(page, '/nabial/mleko-i-napoje-mleczne');
     await page.waitForLoadState('domcontentloaded');
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
     const breadcrumb = page.locator('a[data-cy="category-tag"]').first().getByText('Strefa Niskich Cen');
     await expect(breadcrumb).toBeVisible({ timeout: 20000 });
@@ -575,7 +575,7 @@ test.describe('Testy listy produktów', async () => {
     await utility.gotoWithoutParameter(page, '/nabial');
     await page.waitForLoadState('domcontentloaded');
 
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
 
     const breadcrumb = page.locator('a[data-cy="category-tag"]').first().getByText('Strefa Niskich Cen');
     await expect(breadcrumb).toBeVisible({ timeout: 20000 });

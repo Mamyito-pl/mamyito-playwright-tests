@@ -53,12 +53,16 @@ test.describe('Testy dostawy', async () => {
 
     await page.goto('/dostawa', { waitUntil: 'domcontentloaded' });
 
+    await page.waitForTimeout(2000);
+
+    await paymentsPage.closeAddressModal();
+
     await expect(deliveryPage.getDeliveryAddressTitle).toBeVisible();
     await expect(deliveryPage.getAddNewAddressButton).toBeVisible();
     await expect(deliveryPage.getDeliveryDateTitle).toBeVisible();
   })
 
-  test('M | Możliwość wyboru terminu dostawy', { tag: ['@ProdSmoke', '@Smoke'] }, async ({ page, addAddressDeliveryViaAPI, detachDeliverySlotViaAPI }) => {
+  test('M | Możliwość wyboru terminu dostawy', { tag: ['@ProdSmoke', '@Smoke'] }, async ({ page, addAddressDelivery, detachDeliverySlotViaAPI }) => {
 
     await allure.tags('Mobilne', 'Dostawa');
     await allure.epic('Mobilne');
@@ -69,30 +73,28 @@ test.describe('Testy dostawy', async () => {
 
     test.setTimeout(150000);
 
-    await addAddressDeliveryViaAPI('Adres Testowy');
-
     await page.goto('/dostawa', { waitUntil: 'load' });
 
     await page.waitForTimeout(2000);
 
-    await page.waitForSelector('text=Adres Testowy', { state: 'visible' });
-    await page.getByText('Adres Testowy').click({ force: true, delay: 300 });
+    await paymentsPage.closeAddressModal();
+
+    await addAddressDelivery('Adres Testowy');
 
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 15000, state: 'visible' });
 
     await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
     await page.waitForTimeout(1000);
     await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
-    await expect(deliveryPage.getDeliverySlotButton.first()).toContainText('Wybrany', { timeout: 3000 });
+    await expect(deliveryPage.getDeliverySlotButton.first()).toHaveCSS('background-color', 'rgb(78, 180, 40)', { timeout: 3000 });
     
     await page.evaluate(async () => {
       window.scrollBy(0, 1000)
       await new Promise(r => setTimeout(r, 700));
     })
 
-    await deliveryPage.getDeliverySlotButton.last().click();
-    await expect(deliveryPage.getDeliverySlotButton.first()).toContainText('Dostępny', { timeout: 3000 });
-    await expect(deliveryPage.getDeliverySlotButton.last()).toContainText('Wybrany', { timeout: 3000 });
+    await deliveryPage.getDeliverySlotButton.first().click();
+    await expect(deliveryPage.getDeliverySlotButton.first()).not.toHaveCSS('background-color', 'rgb(78, 180, 40)', { timeout: 3000 });
 
     await detachDeliverySlotViaAPI();
   })

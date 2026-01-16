@@ -41,7 +41,7 @@ export default class Przelewy24Page {
     }
 
     get getBackToShopButton() {
-        return this.page.getByText('Powrót do sklepu');
+        return this.page.getByText('Powrót na stronę sprzedawcy');
     }
 
     get getErrorPayButton() {
@@ -49,6 +49,6 @@ export default class Przelewy24Page {
     }
 
     get getPayButton() {
-        return this.page.locator("#user_account_pbl_correct");
+        return this.page.getByText('Płatność testowa');
     }
 }

@@ -1,13 +1,15 @@
 import { Page, expect } from "@playwright/test";
 import * as selectors from '../utils/selectors.json';
 import { isMobile } from '../utils/utility-methods.ts';
+import DeliveryPage from "./Delivery.page.ts";
 
 export default class PaymentsPage {
     private mobile: boolean;
+    private deliveryPage: DeliveryPage;
 
     constructor(public page: Page) {
         this.page = page;
-        
+        this.deliveryPage = new DeliveryPage(page);
         const viewport = page.viewportSize();
         if (!viewport) throw new Error('Viewport is null');
         this.mobile = isMobile(viewport.width);
@@ -54,6 +56,12 @@ export default class PaymentsPage {
     async waitForLoader() {
       if (await this.getLoaderPaymentsPage.isVisible({ timeout: 5000 })) {
         await expect(this.getLoaderPaymentsPage).toBeHidden({ timeout: 10000 });
+      }
+    }
+
+    async closeAddressModal() {
+      if (await this.deliveryPage.getCloseAddressModalButton.isVisible({ timeout: 5000 })) {
+        await this.deliveryPage.clickCloseAddressModalButton();
       }
     }
 

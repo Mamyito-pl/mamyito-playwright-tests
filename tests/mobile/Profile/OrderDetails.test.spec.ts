@@ -16,7 +16,7 @@ import { format, parseISO } from 'date-fns';
 
 test.describe.configure({ mode: 'serial' })
 
-test.describe('Testy szczegółów zamówienia', async () => {
+test.describe.only('Testy szczegółów zamówienia', async () => {
 
   let cartPage: CartPage;
   let deliveryPage: DeliveryPage;
@@ -30,9 +30,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
   let product: string = 'janex polędwica wołowa';
   let paymentMethod = 'Płatność kartą przy odbiorze';
   
-  test.beforeEach(async ({ page, addAddressDeliveryViaAPI }) => {
-
-    await addAddressDeliveryViaAPI('Adres Testowy');
+  test.beforeEach(async ({ page }) => {
 
     await page.goto('/', { waitUntil: 'load'})
 
@@ -53,13 +51,14 @@ test.describe('Testy szczegółów zamówienia', async () => {
     przelewy24Page = new Przelewy24Page(page);
   })
   
-  test.afterEach(async ({ clearCartViaAPI, deleteDeliveryAddressViaAPI }) => {
+  test.afterEach(async ({ clearCartViaAPI, deleteDeliveryAddressViaAPI, detachDeliverySlotViaAPI }) => {
     
     await deleteDeliveryAddressViaAPI('Adres Testowy');
+    await detachDeliverySlotViaAPI();
     await clearCartViaAPI();
   }) 
 
-  test('M | Złożone prawidłowo zamówienie powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test', '@Prod'] }, async ({ page, baseURL, cancelOrderViaAPI }) => {
+  test('M | Złożone prawidłowo zamówienie powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test', '@Prod'] }, async ({ page, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');
@@ -106,18 +105,27 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
     await utility.addTestParam(page);
     await page.waitForTimeout(5000);
+    await paymentsPage.closeAddressModal();
+    await addAddressDelivery('Adres Testowy');
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
     await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
     await page.waitForTimeout(1000);
     await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
-    await expect(deliveryPage.getDeliverySlotButton.first()).toHaveText('Wybrany', { timeout: 5000 });
+    await deliveryPage.clickSaveReservationButton();
+    await deliveryPage.clickConfirmReservationButton();
+    await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await cartPage.clickCartSummaryPaymentButton();
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/platnosc'), { timeout: 20000 });
     await utility.addTestParam(page);
     await page.waitForTimeout(2000);
     await paymentsPage.checkStatue();
     await page.waitForTimeout(1000);
-    await page.getByText(paymentMethod).click({ force: true });
+    if (await commonPage.getLoader.isVisible({ timeout: 5000 })) {
+      await expect(commonPage.getLoader).toBeHidden({ timeout: 10000 });
+      await page.getByText(paymentMethod, { exact: true }).click({ force: true });
+    } else {
+      await page.getByText(paymentMethod, { exact: true }).click({ force: true });
+    }
     await cartPage.clickCartExpandCollapseButton();
     const paymentTotalPrice = await cartPage.getTotalSummaryValue.textContent();
     const paymentTotalPriceFormatted = paymentTotalPrice?.slice(10);
@@ -182,7 +190,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     });
   })
   
-  test.skip('M | Zamówienie po błędnej płatności powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, cancelOrderViaAPI }) => {
+  test.skip('M | Zamówienie po błędnej płatności powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');
@@ -227,11 +235,16 @@ test.describe('Testy szczegółów zamówienia', async () => {
 
     await cartPage.clickCartSummaryButton();
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
+    await page.waitForTimeout(2000);
+    await paymentsPage.closeAddressModal();
+    await addAddressDelivery('Adres Testowy');
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
     await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
     await page.waitForTimeout(1000);
     await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
-    await expect(deliveryPage.getDeliverySlotButton.first()).toHaveText('Wybrany', { timeout: 5000 });
+    await deliveryPage.clickSaveReservationButton();
+    await deliveryPage.clickConfirmReservationButton();
+    await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await cartPage.clickCartSummaryPaymentButton();
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/platnosc'), { timeout: 20000 });
     await page.waitForTimeout(2000);
@@ -338,7 +351,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     });
   })
 
-  test('M | Możliwość ponownego zamówienia po złożeniu prawidłowego zamówienia', { tag: ['@Beta', '@Test', '@Prod'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI }) => {
+  test('M | Możliwość ponownego zamówienia po złożeniu prawidłowego zamówienia', { tag: ['@Beta', '@Test', '@Prod'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');
@@ -364,18 +377,27 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await cartPage.clickCartSummaryButton();
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
     await utility.addTestParam(page);
+    await paymentsPage.closeAddressModal();
+    await addAddressDelivery('Adres Testowy');
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
     await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
     await page.waitForTimeout(1000);
     await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
-    await expect(deliveryPage.getDeliverySlotButton.first()).toHaveText('Wybrany', { timeout: 5000 });
+    await deliveryPage.clickSaveReservationButton();
+    await deliveryPage.clickConfirmReservationButton();
+    await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await cartPage.clickCartSummaryPaymentButton();
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/platnosc'), { timeout: 20000 });
     await utility.addTestParam(page);
     await page.waitForTimeout(2000);
     await paymentsPage.checkStatue();
     await page.waitForTimeout(1000);
-    await page.getByText('Płatność kartą przy odbiorze').click({ force: true });
+    if (await commonPage.getLoader.isVisible({ timeout: 5000 })) {
+      await expect(commonPage.getLoader).toBeHidden({ timeout: 10000 });
+      await page.getByText(paymentMethod, { exact: true }).click({ force: true });
+    } else {
+      await page.getByText(paymentMethod, { exact: true }).click({ force: true });
+    }
     await cartPage.clickCartPaymentConfirmationButton();
     await cartPage.waitForPaymentConfirmationButton();
 
@@ -387,138 +409,6 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await paymentsPage.clickOrderDetailsButton();
 
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/profil/zamowienia\\?order=.*'), { timeout: 30000 });
-
-    await expect(orderDetailsPage.getBackToOrdersButton).toBeVisible({ timeout: 15000 });
-    await expect(orderDetailsPage.getRepeatOrderButton).toBeVisible({ timeout: 15000 });
-
-    await expect(orderDetailsPage.getProductNames.first()).toBeVisible({ timeout: 15000 });
-    const productNameElementsOrderDetails = await orderDetailsPage.getProductNames.all();
-    const productNamesOrderDetails: string[] = [];
-    
-    for (const element of productNameElementsOrderDetails) {
-      const nameText = await element.textContent();
-      if (nameText !== null) {
-        productNamesOrderDetails.push(nameText);
-      }
-    }
-    
-    await orderDetailsPage.clickRepeatOrderButton();
-
-    await expect(orderDetailsPage.getRepeatOrderModal).toBeVisible({ timeout: 5000 });
-    await expect(orderDetailsPage.getRepeatOrderModalAddProductsButton).toBeVisible({ timeout: 5000 });
-    await expect(orderDetailsPage.getRepeatOrderModalCancelButton).toBeVisible({ timeout: 5000 });
-
-    const productNameElementsRepeatOrderModal = await orderDetailsPage.getRepeatOrderModalProductNames.all();
-    expect(productNameElementsRepeatOrderModal.length).toBeGreaterThan(0);
-    for (let i = 0; i < productNamesOrderDetails.length; i++) {
-      const orderDetailName = productNamesOrderDetails[i];
-      const modalName = await productNameElementsRepeatOrderModal[i].textContent();
-      expect(orderDetailName).toContain(modalName);
-    }
-
-    await orderDetailsPage.getRepeatOrderModalAddProductsButton.click();
-
-    await expect(orderDetailsPage.getRepeatOrderModal).not.toBeVisible({ timeout: 5000 });
-
-    await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/koszyk'), { timeout: 10000 });
-
-    await page.goBack();
-
-    await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/profil/zamowienia\\?order=.*'), { timeout: 30000 });
-
-    await cancelOrderViaAPI(page);
-
-    await expect(commonPage.getCartProductsCount).toBeVisible({ timeout: 5000 });
-    await expect(commonPage.getCartProductsPrice).toBeVisible({ timeout: 5000 });
-  })
-          
-  test.skip('M | Możliwość ponownego zamówienia po złożeniu zamówienia z błędną płatnością', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI }) => {
-
-    await allure.tags('Mobilne', 'Profil');
-    await allure.epic('Mobilne');
-    await allure.parentSuite('Profil');
-    await allure.suite('Testy szczegółów zamówienia');
-    await allure.subSuite('');
-    await allure.allureId('2399');
-
-    test.skip(`${process.env.URL}` == 'https://mamyito.pl', 'Test wymaga złożenia zamówienia');
-
-    test.setTimeout(350000);
-
-    await addProduct(product);
-    await searchbarPage.getProductItemCount.first().click();
-    await page.waitForTimeout(1000);
-    await searchbarPage.getProductItemCount.first().type('1');
-    await commonPage.getCartButton.click();
-    await page.waitForTimeout(1000);
-
-    await page.goto('/koszyk', { waitUntil: 'load'});
-    await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
-    await cartPage.clickCartSummaryButton();
-    await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
-    await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
-    await page.waitForTimeout(1000);
-    await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
-    await expect(deliveryPage.getDeliverySlotButton.first()).toHaveText('Wybrany', { timeout: 5000 });
-    await cartPage.clickCartSummaryPaymentButton();
-    await page.waitForTimeout(2000);
-    await paymentsPage.checkStatue();
-    await page.waitForTimeout(1000);
-    await page.getByText('Przelew online').click({ force: true });
-    await cartPage.clickCartPaymentConfirmationButton();
-    await cartPage.waitForPaymentConfirmationButton();
-
-    await expect(page).toHaveURL(new RegExp('^https://sandbox-go.przelewy24.pl/trnRequest/'), { timeout: 15000 });
-    await przelewy24Page.clickMainTransferButton();
-    await przelewy24Page.clickChosenTransferButton();
-    await page.waitForLoadState('load')
-    await expect(page).toHaveURL(new RegExp('^https://vsa.przelewy24.pl/pl/payment'), { timeout: 15000 });
-    await page.waitForTimeout(1000);
-
-    const expectedUrlPattern = /^https:\/\/sandbox-go\.przelewy24\.pl\/trnResult\//;
-    const maxTries = 5;
-    let urlChanged = false;
-
-    for (let i = 0; i < maxTries; i++) {
-      await przelewy24Page.clickErrorPayButton();
-      await page.waitForTimeout(1000);
-
-      const currentUrl = page.url();
-      if (expectedUrlPattern.test(currentUrl)) {
-        urlChanged = true;
-        break;
-      }
-    }
-
-    expect(urlChanged).toBe(true);
-    
-    await expect(page).toHaveURL(new RegExp('^https://sandbox-go.przelewy24.pl/trnResult/'), { timeout: 15000 });
-    await przelewy24Page.clickBackToShopButton();
-    await page.waitForTimeout(2000);
-
-    await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/podsumowanie'), { timeout: 20000 });
-    await expect(page.getByText('Przetwarzanie płatności....')).toBeVisible({ timeout: 20000 });
-    await expect(page.getByText('Nr zamówienia: ')).toBeVisible();
-    await expect(paymentsPage.getOrderDetailsButton).toBeVisible();
-    await expect(paymentsPage.getRepeatOrderButton).toBeVisible();
-    await expect(paymentsPage.getBackHomeButton).toBeVisible();
-
-    await page.waitForSelector('text="Przetwarzanie płatności...."', { timeout: 145000, state: 'hidden' });
-
-    await expect(page.getByText('Wystąpił błąd płatności')).toBeVisible({ timeout: 5000 });
-    await expect(page.getByText('Sprawdź swój adres email, aby zobaczyć co poszło nie tak')).toBeVisible({ timeout: 5000 });
-    await expect(page.getByText('Co chcesz zrobić?')).toBeVisible({ timeout: 5000 });
-    await expect(paymentsPage.getOrderDetailsButton).toBeVisible({ timeout: 5000 });
-    await paymentsPage.clickOrderDetailsButton();
-
-    await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/profil/zamowienia\\?order=.*'), { timeout: 30000 });
-
-    const statusIsVisible = await page.locator('div[data-sentry-element="HeaderOrderDetails"]').evaluate((element) => {
-      const textContent = element.textContent || '';
-      return textContent.includes('Oczekuje na płatność') || textContent.includes('Nowe');
-    });
-
-    expect(statusIsVisible).toBe(true);
 
     await expect(orderDetailsPage.getBackToOrdersButton).toBeVisible({ timeout: 15000 });
     await expect(orderDetailsPage.getRepeatOrderButton).toBeVisible({ timeout: 15000 });

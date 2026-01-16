@@ -354,6 +354,8 @@ export const test = baseTest.extend<MyFixtures>({
 
     const addProduct = async (product: string) => {
 
+      await page.waitForLoadState('load');
+      await page.waitForTimeout(2000);
       await searchbarPage.clickSearchbar();
       await page.waitForTimeout(1000);
       await searchbarPage.enterProduct(product);

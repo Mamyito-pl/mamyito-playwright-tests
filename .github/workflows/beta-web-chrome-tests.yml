@@ -32,8 +32,8 @@ jobs:
     env:
       URL: ${{ secrets.BETA_URL_SECRET }}
       APIURL: ${{ secrets.BETA_APIURL_SECRET }}
-      EMAIL: ${{ secrets.EMAIL_SECRET }}
-      PASSWORD: ${{ secrets.PASSWORD_SECRET }}
+      EMAIL: ${{ secrets.EMAIL_SECRET_SECOND }}
+      PASSWORD: ${{ secrets.PASSWORD_SECRET_SECOND }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

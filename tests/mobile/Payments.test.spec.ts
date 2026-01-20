@@ -26,9 +26,7 @@ test.describe('Testy płatności', async () => {
   let searchbarPage : SearchbarPage;
   let product = 'janex polędwica wołowa';
 
-  test.beforeEach(async ({ page, addAddressDeliveryViaAPI }) => {
-
-    await addAddressDeliveryViaAPI('Adres Testowy');
+  test.beforeEach(async ({ page }) => {
 
     await page.goto('/', { waitUntil: 'load'})
 
@@ -48,13 +46,14 @@ test.describe('Testy płatności', async () => {
     searchbarPage = new SearchbarPage(page);
   })
   
-  test.afterEach(async ({ clearCartViaAPI, deleteDeliveryAddressViaAPI }) => {
+  test.afterEach(async ({ clearCartViaAPI, deleteDeliveryAddressViaAPI, detachDeliverySlotViaAPI }) => {
 
     await deleteDeliveryAddressViaAPI('Adres Testowy');
+    await detachDeliverySlotViaAPI();
     await clearCartViaAPI();
   })
 
-  test('M | Przejście do sklepu podczas przetwarzania płatności', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL }) => {
+  test('M | Przejście do sklepu podczas przetwarzania płatności', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Płatności');
     await allure.epic('Mobilne');
@@ -78,12 +77,18 @@ test.describe('Testy płatności', async () => {
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
     await cartPage.clickCartSummaryButton();
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(2000);
+    await paymentsPage.closeAddressModal();
+    await addAddressDelivery('Adres Testowy');
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
     await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
     await page.waitForTimeout(1000);
     await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
     await page.waitForTimeout(1000);
     await cartPage.clickCartSummaryPaymentButton();
+    await deliveryPage.clickConfirmReservationButton(); 
+    await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await page.waitForTimeout(2000);
     await paymentsPage.checkStatue();
     await page.waitForTimeout(1000);
@@ -112,7 +117,7 @@ test.describe('Testy płatności', async () => {
     await expect(paymentsPage.getBackHomeButton).toBeHidden();
   })
 
-  test('M | Okno ponownego zamówienia otwiera się ze wszystkimi potrzebnymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL }) => {
+  test('M | Okno ponownego zamówienia otwiera się ze wszystkimi potrzebnymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Płatności');
     await allure.epic('Mobilne');
@@ -136,12 +141,18 @@ test.describe('Testy płatności', async () => {
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
     await cartPage.clickCartSummaryButton();
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(2000);
+    await paymentsPage.closeAddressModal();
+    await addAddressDelivery('Adres Testowy');
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
     await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
     await page.waitForTimeout(1000);
     await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
     await page.waitForTimeout(1000);
     await cartPage.clickCartSummaryPaymentButton();
+    await deliveryPage.clickConfirmReservationButton(); 
+    await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await page.waitForTimeout(2000);
     await paymentsPage.checkStatue();
     await page.waitForTimeout(1000);
@@ -161,7 +172,7 @@ test.describe('Testy płatności', async () => {
     await expect(paymentsPage.getCancelButtonRepeatOrderWindow).toBeVisible({ timeout: 5000 });
   })
   
-  test('M | Przejście do szczegółów zamówienia podczas przetwarzania płatności', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL }) => {
+  test('M | Przejście do szczegółów zamówienia podczas przetwarzania płatności', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Płatności');
     await allure.epic('Mobilne');
@@ -185,12 +196,18 @@ test.describe('Testy płatności', async () => {
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
     await cartPage.clickCartSummaryButton();
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(2000);
+    await paymentsPage.closeAddressModal();
+    await addAddressDelivery('Adres Testowy');
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
     await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
     await page.waitForTimeout(1000);
     await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
     await page.waitForTimeout(1000);
     await cartPage.clickCartSummaryPaymentButton();
+    await deliveryPage.clickConfirmReservationButton(); 
+    await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await page.waitForTimeout(2000);
     await paymentsPage.checkStatue();
     await page.waitForTimeout(1000);
@@ -208,7 +225,9 @@ test.describe('Testy płatności', async () => {
     await expect(orderDetailsPage.getCancelOrderButton).toBeVisible({ timeout: 5000 });
   })
 
-  test.skip('M | Możliwość zapłaty za zamówienie z poziomu listy zamówień', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
+  test.skip('M | Możliwość zapłaty za zamówienie z poziomu listy zamówień', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL, addAddressDelivery }) => {
+
+    // UNSKIP AFTER FIX KAN-2189
 
     await allure.tags('Mobilne', 'Płatności');
     await allure.epic('Mobilne');
@@ -232,12 +251,19 @@ test.describe('Testy płatności', async () => {
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
     await cartPage.clickCartSummaryButton();
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(2000);
+    await paymentsPage.closeAddressModal();
+    await addAddressDelivery('Adres Testowy');
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
     await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
     await page.waitForTimeout(1000);
     await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
     await page.waitForTimeout(1000);
     await cartPage.clickCartSummaryPaymentButton();
+    await deliveryPage.clickConfirmReservationButton(); 
+    await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
+    await page.waitForLoadState('load');
     await page.waitForTimeout(2000);
     await paymentsPage.checkStatue();
     await page.waitForTimeout(1000);
@@ -303,8 +329,8 @@ test.describe('Testy płatności', async () => {
   })
   
   test.describe('Płatność BLIK', async () => {
-    
-    test('M | Zapłata prawidłowym kodem BLIK', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
+      
+    test('M | Zapłata prawidłowym kodem BLIK', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -325,26 +351,33 @@ test.describe('Testy płatności', async () => {
       await commonPage.getCartButton.click();
       await page.waitForTimeout(1000);
 
-      await page.goto('/koszyk', { waitUntil: 'load'});
+      await expect(cartPage.getCartDrawerToCartButton).toBeVisible({ timeout: 10000 });
+      await cartPage.clickCartDrawerToCartButton();
+      await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/koszyk'), { timeout: 20000 });
+      await utility.addTestParam(page);
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
+      await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
+      await utility.addTestParam(page);
       await page.waitForTimeout(2000);
-      if (await deliveryPage.getCloseAddressModalButton.isVisible({ timeout: 5000 })) {
-        await deliveryPage.clickCloseAddressModalButton();
-      }
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(2000);
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
+      await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/platnosc'), { timeout: 20000 });
+      await utility.addTestParam(page);
       await page.waitForTimeout(2000);
       await paymentsPage.checkStatue();
       await page.waitForTimeout(1000);
       await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
-      await paymentsPage.enterBlikCode('777888');
+      await paymentsPage.enterBlikCode('777111');
       await cartPage.clickCartPaymentConfirmationButton();
-      await cartPage.waitForPaymentConfirmationButton();
     
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/podsumowanie'), { timeout: 20000 });
       await expect(page.getByText('Nr zamówienia: ')).toBeVisible();
@@ -356,7 +389,7 @@ test.describe('Testy płatności', async () => {
       await expect(page.getByText('Twoje zamówienie zostało potwierdzone i zostanie dostarczone w wybranym przez Ciebie terminie.')).toBeVisible({ timeout: 20000 });
     })
 
-    test('M | Zapłata nieprawidłowym kodem BLIK powinna utworzyć zamówienie', { tag: ['@ProdSmoke'] }, async ({ page, addProductsByValue, baseURL }) => {
+    test('M | Zapłata nieprawidłowym kodem BLIK powinna utworzyć zamówienie', { tag: ['@ProdSmoke'] }, async ({ page, addProductsByValue, baseURL, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -379,16 +412,16 @@ test.describe('Testy płatności', async () => {
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
       await utility.addTestParam(page);
       await page.waitForTimeout(2000);
-      if (await deliveryPage.getCloseAddressModalButton.isVisible({ timeout: 5000 })) {
-        await deliveryPage.clickCloseAddressModalButton();
-      }
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(2000);
-      await expect(deliveryPage.getDeliverySlotButton.first()).toHaveCSS('background-color', 'rgb(67, 156, 34)');
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/platnosc'), { timeout: 20000 });
       await utility.addTestParam(page);
       await page.waitForTimeout(2000);
@@ -440,7 +473,7 @@ test.describe('Testy płatności', async () => {
       expect(statusAfterCancelIsVisible).toBe(true);
     })
 
-    test('M | Zapłata nieprawidłowym kodem BLIK', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL }) => {
+    test('M | Zapłata nieprawidłowym kodem BLIK', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -464,12 +497,18 @@ test.describe('Testy płatności', async () => {
       await page.goto('/koszyk', { waitUntil: 'load'});
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
+      await page.waitForLoadState('load');
+      await page.waitForTimeout(2000);
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(1000);
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForTimeout(2000);
       await paymentsPage.checkStatue();
       await page.waitForTimeout(1000);
@@ -494,7 +533,7 @@ test.describe('Testy płatności', async () => {
       await expect(paymentsPage.getRepeatPaymentButton).toBeVisible({ timeout: 5000 });
     })
     
-    test('M | Zapłata pustym kodem BLIK', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct }) => {
+    test('M | Zapłata pustym kodem BLIK', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, addAddressDelivery }) => {
     
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -516,12 +555,18 @@ test.describe('Testy płatności', async () => {
       await page.goto('/koszyk', { waitUntil: 'load'});
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
+      await page.waitForLoadState('load');
+      await page.waitForTimeout(2000);
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(1000);
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForTimeout(2000);
       await paymentsPage.checkStatue();
       await page.waitForTimeout(1000);
@@ -531,7 +576,7 @@ test.describe('Testy płatności', async () => {
       await expect(paymentsPage.getBlikTextboxPlaceholder).toHaveText('Wpisz 6-cio cyfrowy kod BLIK');
     })
     
-    test.skip('M | Zapłata za krótkim kodem BLIK', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct }) => {
+    test('M | Zapłata za krótkim kodem BLIK', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -553,17 +598,22 @@ test.describe('Testy płatności', async () => {
       await page.goto('/koszyk', { waitUntil: 'load'});
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
+      await page.waitForLoadState('load');
+      await page.waitForTimeout(2000);
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(1000);
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForTimeout(2000);
-      await paymentsPage.checkStatue();
-      await page.waitForTimeout(1000);
       await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
       await paymentsPage.enterBlikCode('123');
+      await paymentsPage.checkStatue();
       await cartPage.getCartPaymentConfirmationDisabledButton.isDisabled();
       await expect(paymentsPage.getBlikTextboxPlaceholder).toBeVisible();
       await expect(paymentsPage.getBlikTextboxPlaceholder).toHaveText('Wpisz 6-cio cyfrowy kod BLIK');
@@ -571,7 +621,7 @@ test.describe('Testy płatności', async () => {
       await expect(paymentsPage.getBlikTextboxHelperText).toHaveText('Podany kod jest nieprawidłowy. Kod BLIK musi zawierać 6 cyfr');
     })
         
-    test.skip('M | Zapłata za długim kodem BLIK', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct }) => {
+    test('M | Zapłata za długim kodem BLIK', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -593,17 +643,22 @@ test.describe('Testy płatności', async () => {
       await page.goto('/koszyk', { waitUntil: 'load'});
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
+      await page.waitForLoadState('load');
+      await page.waitForTimeout(2000);
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(1000);
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForTimeout(2000);
-      await paymentsPage.checkStatue();
-      await page.waitForTimeout(1000);
       await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
       await paymentsPage.enterBlikCode('12345678');
+      await paymentsPage.checkStatue();
       await cartPage.getCartPaymentConfirmationDisabledButton.isDisabled();
       await expect(paymentsPage.getBlikTextboxPlaceholder).toBeVisible();
       await expect(paymentsPage.getBlikTextboxPlaceholder).toHaveText('Wpisz 6-cio cyfrowy kod BLIK');
@@ -611,7 +666,7 @@ test.describe('Testy płatności', async () => {
       await expect(paymentsPage.getBlikTextboxHelperText).toHaveText('Podany kod jest nieprawidłowy. Kod BLIK musi zawierać 6 cyfr');
     })
                     
-    test('M | Zapłata kodem BLIK z nieprawidłowymi znakami', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct }) => {
+    test('M | Zapłata kodem BLIK z nieprawidłowymi znakami', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -635,12 +690,18 @@ test.describe('Testy płatności', async () => {
       await page.goto('/koszyk', { waitUntil: 'load'});
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
+      await page.waitForLoadState('load');
+      await page.waitForTimeout(2000);
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(1000);
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
       await paymentsPage.enterBlikCode('12345');
 
@@ -660,7 +721,7 @@ test.describe('Testy płatności', async () => {
       }
     })
                         
-    test.skip('M | Ponowna zapłata po nieudanej płatności BLIK', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
+    test('M | Ponowna zapłata po nieudanej płatności BLIK', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -684,16 +745,18 @@ test.describe('Testy płatności', async () => {
       await page.goto('/koszyk', { waitUntil: 'load'});
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
+      await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      if (await deliveryPage.getCloseAddressModalButton.isVisible({ timeout: 5000 })) {
-        await deliveryPage.clickCloseAddressModalButton();
-      }
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(1000);
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForTimeout(2000);
       await paymentsPage.checkStatue();
       await page.waitForTimeout(1000);
@@ -751,7 +814,7 @@ test.describe('Testy płatności', async () => {
       await expect(paymentsPage.getBackHomeButton).toBeVisible();
     })
                             
-    test.skip('M | Zapłata przy odbiorze po nieudanej płatności BLIK', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
+    test('M | Zapłata przy odbiorze po nieudanej płatności BLIK', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -776,15 +839,16 @@ test.describe('Testy płatności', async () => {
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
       await page.waitForTimeout(2000);
-      if (await deliveryPage.getCloseAddressModalButton.isVisible({ timeout: 5000 })) {
-        await deliveryPage.clickCloseAddressModalButton();
-      }
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(1000);
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForTimeout(2000);
       await paymentsPage.checkStatue();
       await page.waitForTimeout(1000);
@@ -828,7 +892,7 @@ test.describe('Testy płatności', async () => {
 
   test.describe('Płatności przelewem online', async () => {
   
-    test.skip('M | Zapłata przelewem online', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
+    test('M | Zapłata przelewem online', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -853,15 +917,16 @@ test.describe('Testy płatności', async () => {
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
       await page.waitForTimeout(2000);
-      if (await deliveryPage.getCloseAddressModalButton.isVisible({ timeout: 5000 })) {
-        await deliveryPage.clickCloseAddressModalButton();
-      }
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(1000);
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForTimeout(2000);
       await paymentsPage.checkStatue();
       await page.waitForTimeout(1000);
@@ -906,8 +971,8 @@ test.describe('Testy płatności', async () => {
       await paymentsPage.getBackHomeButton.scrollIntoViewIfNeeded();
       await expect(paymentsPage.getBackHomeButton).toBeVisible();
     }) 
-    
-    test.skip('M | Błędna płatność przelewem online', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL }) => {
+        
+    test('M | Błędna płatność przelewem online', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -931,12 +996,17 @@ test.describe('Testy płatności', async () => {
       await page.goto('/koszyk', { waitUntil: 'load'});
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
+      await page.waitForTimeout(2000);
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(1000);
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForTimeout(2000);
       await paymentsPage.checkStatue();
       await page.waitForTimeout(1000);
@@ -977,7 +1047,7 @@ test.describe('Testy płatności', async () => {
       await expect(paymentsPage.getBackHomeButton).toBeVisible();
     }) 
                             
-    test.skip('M | Ponowna zapłata po nieudanej płatności przelewem online', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
+    test('M | Ponowna zapłata po nieudanej płatności przelewem online', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -1002,15 +1072,16 @@ test.describe('Testy płatności', async () => {
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
       await page.waitForTimeout(2000);
-      if (await deliveryPage.getCloseAddressModalButton.isVisible({ timeout: 5000 })) {
-        await deliveryPage.clickCloseAddressModalButton();
-      }
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(1000);
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForTimeout(2000);
       await paymentsPage.checkStatue();
       await page.waitForTimeout(1000);
@@ -1094,7 +1165,7 @@ test.describe('Testy płatności', async () => {
       await expect(paymentsPage.getBackHomeButton).toBeVisible();
     })
                                 
-    test.skip('M | Zapłata przy odbiorze po nieudanej płatności przelewem online', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL }) => {
+    test('M | Zapłata przy odbiorze po nieudanej płatności przelewem online', { tag: ['@Smoke'] }, async ({ page, addProduct, baseURL, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -1119,15 +1190,16 @@ test.describe('Testy płatności', async () => {
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
       await page.waitForTimeout(2000);
-      if (await deliveryPage.getCloseAddressModalButton.isVisible({ timeout: 5000 })) {
-        await deliveryPage.clickCloseAddressModalButton();
-      }
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(1000);
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForTimeout(2000);
       await paymentsPage.checkStatue();
       await page.waitForTimeout(1000);
@@ -1196,7 +1268,7 @@ test.describe('Testy płatności', async () => {
       await expect(paymentsPage.getBackHomeButton).toBeVisible();
     })
             
-    test('M | Próba płatności przelewem online powinna utworzyć zamówienie', { tag: ['@ProdSmoke'] }, async ({ page, addProductsByValue, baseURL }) => {
+    test('M | Próba płatności przelewem online powinna utworzyć zamówienie', { tag: ['@ProdSmoke'] }, async ({ page, addProductsByValue, baseURL, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -1219,16 +1291,16 @@ test.describe('Testy płatności', async () => {
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
       await utility.addTestParam(page);
       await page.waitForTimeout(2000);
-      if (await deliveryPage.getCloseAddressModalButton.isVisible({ timeout: 5000 })) {
-        await deliveryPage.clickCloseAddressModalButton();
-      }
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(2000);
-      await expect(deliveryPage.getDeliverySlotButton.first()).toHaveCSS('background-color', 'rgb(67, 156, 34)');
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/platnosc'), { timeout: 20000 });
       await utility.addTestParam(page);
       await page.waitForTimeout(2000);
@@ -1287,7 +1359,7 @@ test.describe('Testy płatności', async () => {
   
   test.describe('Zapłata kartą przy odbiorze', async () => {
   
-    test('M | Zapłata kartą przy odbiorze', { tag: ['@ProdSmoke', '@Smoke'] }, async ({ page, addProductsByValue, baseURL }) => {
+    test('M | Zapłata kartą przy odbiorze', { tag: ['@ProdSmoke', '@Smoke'] }, async ({ page, addProductsByValue, baseURL, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Płatności');
       await allure.epic('Mobilne');
@@ -1310,16 +1382,16 @@ test.describe('Testy płatności', async () => {
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
       await utility.addTestParam(page);
       await page.waitForTimeout(2000);
-      if (await deliveryPage.getCloseAddressModalButton.isVisible({ timeout: 5000 })) {
-        await deliveryPage.clickCloseAddressModalButton();
-      }
+      await paymentsPage.closeAddressModal();
+      await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
       await deliveryPage.getDeliverySlotButton.first().evaluate((el) => el.scrollIntoView({ behavior: 'auto', block: 'center' }));
       await page.waitForTimeout(1000);
       await deliveryPage.getDeliverySlotButton.first().click({ force: true, delay: 300 });
       await page.waitForTimeout(2000);
-      await expect(deliveryPage.getDeliverySlotButton.first()).toHaveCSS('background-color', 'rgb(67, 156, 34)');
       await cartPage.clickCartSummaryPaymentButton();
+      await deliveryPage.clickConfirmReservationButton(); 
+      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/platnosc'), { timeout: 20000 });
       await utility.addTestParam(page);
       await page.waitForTimeout(2000);

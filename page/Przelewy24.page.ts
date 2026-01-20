@@ -49,6 +49,6 @@ export default class Przelewy24Page {
     }
 
     get getPayButton() {
-        return this.page.locator("#user_account_pbl_correct");
+        return this.page.getByText('Zapłać', { exact: true });
     }
 }

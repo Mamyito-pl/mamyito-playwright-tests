@@ -53,7 +53,7 @@
     },
     "DeliveryPage": {
         "common": {
-            "deliverySlot": "button[data-sentry-component='DeliverySlotItem']",
+            "deliverySlot": "[data-sentry-element='DeliverySlotsWrapper'] label:not([disabled]) span",
             "AddressModal": "div[class*='gHrfft']",
             "AddressModalCloseIcon": "svg[class='sc-f8f81ad2-4 fA-DbFc']"
         }

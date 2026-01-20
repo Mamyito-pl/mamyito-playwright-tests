@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { expect, Page } from "@playwright/test";
 import * as selectors from '../utils/selectors.json';
 import { isMobile } from '../utils/utility-methods.ts';
 
@@ -51,6 +51,16 @@ export default class DeliveryPage {
         return this.page.getByText(addressName).locator('..').locator('..').locator('..').locator('div').locator('div').locator('svg[class*="tabler-icon tabler-icon-pencil "]');
     }
 
+    async clickSaveReservationButton() {
+        await expect(this.getSaveReservationButton).toBeVisible({ timeout: 5000 });
+        await this.getSaveReservationButton.click({ force: true, delay: 300 });
+    }   
+
+    async clickConfirmReservationButton() {
+        await expect(this.getConfirmReservationButton).toBeVisible({ timeout: 5000 });
+        await this.getConfirmReservationButton.click({ force: true, delay: 300 });
+    }
+
     get getCloseAddressModalButton() {
         return this.page.locator('button[aria-label="Zamknij"]');
     }
@@ -84,11 +94,19 @@ export default class DeliveryPage {
     }
 
     get getDeliveryDateTitle() {
-        return this.page.locator('div[data-sentry-element="Title"]').getByText('Termin dostawy');
+        return this.page.locator('div[data-sentry-component="CartDeliveryDate"]').getByText('Termin dostawy');
     }
 
     get getVerifyAddressButton() {
         return this.page.getByRole('button', { name: 'Zweryfikuj' });
+    }
+
+    get getSaveReservationButton() {
+        return this.page.getByRole('button', { name: 'Zapisz rezerwacje' });
+    }
+
+    get getConfirmReservationButton() {
+        return this.page.getByRole('button', { name: 'Potwierdź rezerwację' });
     }
 
     // Address/Invoice Modal
@@ -102,7 +120,7 @@ export default class DeliveryPage {
     }
 
     get getAddressModalSaveButton() {
-        return this.page.getByRole('button', { name: 'Zapisz' });
+        return this.page.getByRole('button', { name: 'Zapisz', exact: true });
     }
 
     get getAddressModalCancelButton() {

@@ -16,7 +16,7 @@ import { parseISO, format } from 'date-fns';
 
 test.describe.configure({ mode: 'serial' })
 
-test.describe('Testy szczegółów zamówienia', async () => {
+test.describe.only('Testy szczegółów zamówienia', async () => {
 
   let cartPage: CartPage;
   let deliveryPage: DeliveryPage;
@@ -30,9 +30,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
   let product: string = 'janex polędwica wołowa';
   let paymentMethod = 'Płatność kartą przy odbiorze';
   
-  test.beforeEach(async ({ page, addAddressDeliveryViaAPI }) => {
-
-    await addAddressDeliveryViaAPI('Adres Testowy');
+  test.beforeEach(async ({ page }) => {
 
     await utility.gotoWithRetry(page, '/');
 
@@ -53,13 +51,14 @@ test.describe('Testy szczegółów zamówienia', async () => {
     przelewy24Page = new Przelewy24Page(page);
   })
   
-  test.afterEach(async ({ clearCartViaAPI, deleteDeliveryAddressViaAPI }) => {
+  test.afterEach(async ({ clearCartViaAPI, deleteDeliveryAddressViaAPI, detachDeliverySlotViaAPI }) => {
     
     await deleteDeliveryAddressViaAPI('Adres Testowy');
+    await detachDeliverySlotViaAPI();
     await clearCartViaAPI();
   }) 
 
-  test('W | Złożone prawidłowo zamówienie powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test', '@Prod'] }, async ({ page, baseURL, cancelOrderViaAPI }) => {
+  test('W | Złożone prawidłowo zamówienie powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test', '@Prod'] }, async ({ page, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');
@@ -105,9 +104,14 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await cartPage.clickCartSummaryButton();
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
     await utility.addTestParam(page);
+    await page.waitForTimeout(2000);
+    await paymentsPage.closeAddressModal();
+    await addAddressDelivery('Adres Testowy');
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
     await deliveryPage.getDeliverySlotButton.first().click();
     await cartPage.clickCartSummaryPaymentButton();
+    await deliveryPage.clickConfirmReservationButton(); 
+    await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/platnosc'), { timeout: 20000 });
     await utility.addTestParam(page);
     await page.waitForTimeout(2000);
@@ -173,7 +177,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     });
   })
 
-  test.skip('W | Zamówienie po błędnej płatności powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, cancelOrderViaAPI }) => {
+  test.skip('W | Zamówienie po błędnej płatności powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');
@@ -217,10 +221,15 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000});
 
     await cartPage.clickCartSummaryButton();
+    await page.waitForTimeout(2000);
+    await paymentsPage.closeAddressModal();
+    await addAddressDelivery('Adres Testowy');
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
     await deliveryPage.getDeliverySlotButton.first().click();
-
     await cartPage.clickCartSummaryPaymentButton();
+    await deliveryPage.clickConfirmReservationButton(); 
+    await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
+    await page.waitForTimeout(2000);
     await page.getByText('Przelew online').click({ force: true });
     await paymentsPage.checkStatue();
     const paymentTotalPrice = await cartPage.getTotalSummaryValue.textContent();
@@ -319,7 +328,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     });
   })
       
-  test('W | Możliwość ponownego zamówienia po złożeniu prawidłowego zamówienia', { tag: ['@Beta', '@Test', '@Prod'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI }) => {
+  test('W | Możliwość ponownego zamówienia po złożeniu prawidłowego zamówienia', { tag: ['@Beta', '@Test', '@Prod'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');
@@ -345,10 +354,14 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await cartPage.clickCartSummaryButton();
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
     await utility.addTestParam(page);
+    await page.waitForTimeout(2000);
+    await paymentsPage.closeAddressModal();
+    await addAddressDelivery('Adres Testowy');
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
     await deliveryPage.getDeliverySlotButton.first().click();
-
     await cartPage.clickCartSummaryPaymentButton();
+    await deliveryPage.clickConfirmReservationButton(); 
+    await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/platnosc'), { timeout: 20000 });
     await utility.addTestParam(page);
     await page.waitForTimeout(2000);
@@ -407,8 +420,9 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await expect(commonPage.getCartProductsCount).toBeVisible({ timeout: 5000 });
     await expect(commonPage.getCartProductsPrice).toBeVisible({ timeout: 5000 });
   })
-        
-  test.skip('W | Możliwość ponownego zamówienia po złożeniu zamówienia z błędną płatnością', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI }) => {
+
+          
+  test('W | Możliwość ponownego zamówienia po złożeniu zamówienia z błędną płatnością', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');

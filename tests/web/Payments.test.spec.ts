@@ -88,7 +88,7 @@ test.describe('Testy płatności', async () => {
     await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await page.waitForLoadState('load');
     await page.waitForTimeout(2000);
-    await page.getByText('Płatność kartą przy odbiorze').click({ force: true });
+    await paymentsPage.waitForLoaderAndSelectPaymentMethod('Płatność kartą przy odbiorze');
     await paymentsPage.checkStatue();
     await cartPage.clickCartPaymentConfirmationButton();
     await cartPage.waitForPaymentConfirmationButton();
@@ -149,7 +149,7 @@ test.describe('Testy płatności', async () => {
     await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await page.waitForLoadState('load');
     await page.waitForTimeout(2000);
-    await page.getByText('Płatność kartą przy odbiorze').click({ force: true });
+    await paymentsPage.waitForLoaderAndSelectPaymentMethod('Płatność kartą przy odbiorze');
     await paymentsPage.checkStatue();
     await cartPage.clickCartPaymentConfirmationButton();
     await cartPage.waitForPaymentConfirmationButton();
@@ -201,7 +201,7 @@ test.describe('Testy płatności', async () => {
     await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await page.waitForLoadState('load');
     await page.waitForTimeout(2000);
-    await page.getByText('Płatność kartą przy odbiorze').click({ force: true });
+    await paymentsPage.waitForLoaderAndSelectPaymentMethod('Płatność kartą przy odbiorze');
     await paymentsPage.checkStatue();
     await cartPage.clickCartPaymentConfirmationButton();
     await cartPage.waitForPaymentConfirmationButton();
@@ -252,7 +252,7 @@ test.describe('Testy płatności', async () => {
     await deliveryPage.clickConfirmReservationButton();
     await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await page.waitForLoadState('load');
-    await page.getByLabel('Przelew online').check();
+    await paymentsPage.waitForLoaderAndSelectPaymentMethod('Przelew online');
     await paymentsPage.checkStatue();
     await page.waitForTimeout(1000);
     await cartPage.clickCartPaymentConfirmationButton();
@@ -358,7 +358,7 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Kod BLIK');
       await paymentsPage.enterBlikCode('777111');
       await paymentsPage.checkStatue();
       await cartPage.clickCartPaymentConfirmationButton();
@@ -404,9 +404,8 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/platnosc'), { timeout: 20000 });
       await utility.addTestParam(page);
-      await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Kod BLIK');
       await paymentsPage.enterBlikCode('123123');
       await paymentsPage.checkStatue();
       await cartPage.clickCartPaymentConfirmationButton();
@@ -488,7 +487,7 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Kod BLIK');
       await paymentsPage.enterBlikCode('123123');
       await paymentsPage.checkStatue();
       await cartPage.clickCartPaymentConfirmationButton();
@@ -542,7 +541,7 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Kod BLIK');
       await paymentsPage.checkStatue();
       await cartPage.getCartPaymentConfirmationDisabledButton.isDisabled();
       await expect(paymentsPage.getBlikTextboxPlaceholder).toBeVisible();
@@ -582,7 +581,7 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Kod BLIK');
       await paymentsPage.enterBlikCode('123');
       await paymentsPage.checkStatue();
       await cartPage.getCartPaymentConfirmationDisabledButton.isDisabled();
@@ -625,7 +624,7 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Kod BLIK');
       await paymentsPage.enterBlikCode('12345678');
       await paymentsPage.checkStatue();
       await cartPage.getCartPaymentConfirmationDisabledButton.isDisabled();
@@ -670,7 +669,7 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Kod BLIK');
       await paymentsPage.enterBlikCode('12345');
 
       for (const symbol of symbols) {
@@ -723,7 +722,7 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Kod BLIK');
       await paymentsPage.enterBlikCode('123456');
       await paymentsPage.checkStatue();
       await cartPage.clickCartPaymentConfirmationButton();
@@ -810,7 +809,7 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Kod BLIK');
       await paymentsPage.enterBlikCode('123123');
       await paymentsPage.checkStatue();
       await cartPage.clickCartPaymentConfirmationButton();
@@ -879,7 +878,7 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Przelew online', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Przelew online');
       await paymentsPage.checkStatue();
       await cartPage.clickCartPaymentConfirmationButton();
       await cartPage.waitForPaymentConfirmationButton();
@@ -951,7 +950,7 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Przelew online', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Przelew online');
       await paymentsPage.checkStatue();
       await cartPage.clickCartPaymentConfirmationButton();
       await cartPage.waitForPaymentConfirmationButton();
@@ -1034,7 +1033,7 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Przelew online', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Przelew online');
       await paymentsPage.checkStatue();
       await cartPage.clickCartPaymentConfirmationButton();
       await cartPage.waitForPaymentConfirmationButton();
@@ -1142,7 +1141,7 @@ test.describe('Testy płatności', async () => {
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
-      await page.getByText('Przelew online', { exact: true }).click({ force: true });
+      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Przelew online');
       await paymentsPage.checkStatue();
       await cartPage.clickCartPaymentConfirmationButton();
       await cartPage.waitForPaymentConfirmationButton();

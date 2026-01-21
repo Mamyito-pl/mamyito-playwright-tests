@@ -37,6 +37,7 @@ export default class PaymentsPage {
     }
 
     async checkStatue() {
+        await expect(this.getStatueCheckbox).toBeVisible({ timeout: 10000 });
         await this.getStatueCheckbox.check();
     }
 

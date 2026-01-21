@@ -392,8 +392,9 @@ test.describe('Testy płatności', async () => {
       await page.goto('/koszyk', { waitUntil: 'load'});
       await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
       await cartPage.clickCartSummaryButton();
+      await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
+      await utility.addTestParam(page);
       await page.waitForLoadState('load');
-      await page.waitForTimeout(2000);
       await paymentsPage.closeAddressModal();
       await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
@@ -401,6 +402,8 @@ test.describe('Testy płatności', async () => {
       await cartPage.clickCartSummaryPaymentButton();
       await deliveryPage.clickConfirmReservationButton();
       await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
+      await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/platnosc'), { timeout: 20000 });
+      await utility.addTestParam(page);
       await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
       await page.getByText('Kod BLIK', { exact: true }).click({ force: true });
@@ -1231,7 +1234,7 @@ test.describe('Testy płatności', async () => {
       await cartPage.clickCartSummaryButton();
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
       await utility.addTestParam(page);
-      await page.waitForTimeout(2000);
+      await page.waitForLoadState('load');
       await paymentsPage.closeAddressModal();
       await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
@@ -1323,6 +1326,7 @@ test.describe('Testy płatności', async () => {
       await cartPage.clickCartSummaryButton();
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
       await utility.addTestParam(page);
+      await page.waitForLoadState('load');
       await page.waitForTimeout(2000);
       await paymentsPage.closeAddressModal();
       await addAddressDelivery('Adres Testowy');

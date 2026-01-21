@@ -411,7 +411,7 @@ test.describe('Testy płatności', async () => {
       await cartPage.clickCartSummaryButton();
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
       await utility.addTestParam(page);
-      await page.waitForTimeout(2000);
+      await page.waitForLoadState('load');
       await paymentsPage.closeAddressModal();
       await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
@@ -1290,7 +1290,7 @@ test.describe('Testy płatności', async () => {
       await cartPage.clickCartSummaryButton();
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
       await utility.addTestParam(page);
-      await page.waitForTimeout(2000);
+      await page.waitForLoadState('load');
       await paymentsPage.closeAddressModal();
       await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
@@ -1381,7 +1381,7 @@ test.describe('Testy płatności', async () => {
       await cartPage.clickCartSummaryButton();
       await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/dostawa'), { timeout: 20000 });
       await utility.addTestParam(page);
-      await page.waitForTimeout(2000);
+      await page.waitForLoadState('load');
       await paymentsPage.closeAddressModal();
       await addAddressDelivery('Adres Testowy');
       await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });

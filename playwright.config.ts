@@ -28,7 +28,7 @@ export default defineConfig({
     },
   }]],
   use: {
-    trace: 'on',
+    trace: 'off',
     screenshot: "only-on-failure",
     video: 'retain-on-failure',
   },

@@ -16,7 +16,7 @@ import { parseISO, format } from 'date-fns';
 
 test.describe.configure({ mode: 'serial' })
 
-test.describe.only('Testy szczegółów zamówienia', async () => {
+test.describe('Testy szczegółów zamówienia', async () => {
 
   let cartPage: CartPage;
   let deliveryPage: DeliveryPage;

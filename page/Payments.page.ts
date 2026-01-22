@@ -37,6 +37,7 @@ export default class PaymentsPage {
     }
 
     async checkStatue() {
+        await expect(this.getStatueCheckbox).toBeVisible({ timeout: 10000 });
         await this.getStatueCheckbox.check();
     }
 
@@ -60,9 +61,8 @@ export default class PaymentsPage {
     }
 
     async closeAddressModal() {
-      if (await this.deliveryPage.getCloseAddressModalButton.isVisible({ timeout: 5000 })) {
-        await this.deliveryPage.clickCloseAddressModalButton();
-      }
+      await expect(this.deliveryPage.getCloseAddressModalButton).toBeVisible({ timeout: 15000 });
+      await this.deliveryPage.clickCloseAddressModalButton();
     }
 
     get getLoaderPaymentsPage() {

@@ -49,6 +49,6 @@ export default class Przelewy24Page {
     }
 
     get getPayButton() {
-        return this.page.getByText('Płatność testowa');
+        return this.page.getByText('Zapłać', { exact: true });
     }
 }

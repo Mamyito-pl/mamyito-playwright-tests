@@ -1,16 +1,16 @@
-name: Playwright Web Chrome Tests BETA
+name: Playwright Web Chrome Regression Tests BETA
 
 on:
   workflow_dispatch:
     inputs:
       ALLURE_JOB_RUN_ID:
-        description: Web Chrome - Tests BETA
+        description: Web Chrome - Regression Tests BETA
       ALLURE_USERNAME:
         description:
         required: false
   workflow_run:
     workflows:
-      - "Playwright Mobile Chrome Tests BETA"
+      - "Playwright Mobile Chrome Regression Tests BETA"
     types:
       - completed
 
@@ -20,7 +20,7 @@ env:
   ALLURE_ENDPOINT: https://mamyito.testops.cloud/
   ALLURE_PROJECT_ID: 1
   ALLURE_RESULTS: "allure-results"
-  ALLURE_LAUNCH_NAME: "Web Chrome - Tests BETA"
+  ALLURE_LAUNCH_NAME: "Web Chrome - Regression Tests BETA"
   GITHUB-TOKEN: ${{ secrets.ALLURE_GITHUB_TOKEN }}
 
 jobs:

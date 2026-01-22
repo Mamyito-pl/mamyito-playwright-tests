@@ -1,0 +1,73 @@
+name: Playwright Web Chrome Smoke Tests BETA
+
+on:
+  workflow_dispatch:
+    inputs:
+      ALLURE_JOB_RUN_ID:
+        description: Web Chrome - Smoke Tests BETA
+      ALLURE_USERNAME:
+        description:
+        required: false
+  workflow_run:
+    workflows:
+      - "Playwright Mobile Chrome Smoke Tests BETA"
+    types:
+      - completed
+
+env:
+  ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+  ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
+  ALLURE_ENDPOINT: https://mamyito.testops.cloud/
+  ALLURE_PROJECT_ID: 1
+  ALLURE_RESULTS: "allure-results"
+  ALLURE_LAUNCH_NAME: "Web Chrome - Smoke Tests BETA"
+  GITHUB-TOKEN: ${{ secrets.ALLURE_GITHUB_TOKEN }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    env:
+      URL: ${{ secrets.BETA_URL_SECRET }}
+      APIURL: ${{ secrets.BETA_APIURL_SECRET }}
+      EMAIL: ${{ secrets.EMAIL_SECRET }}
+      PASSWORD: ${{ secrets.PASSWORD_SECRET }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          check-latest: true
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Install dependencies for playwright and allure framework integration
+        run: |
+          npm install -D allure-playwright
+
+      - name: install and configure allurectl using GH Action
+        uses: allure-framework/setup-allurectl@v1
+
+      - name: Run Playwright tests for Web Chrome with Allure
+        run: allurectl watch -- npx playwright test --max-failures=0 --project="chromium" --grep "@Smoke"
+        env:
+          CI: 'true'
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 1
+
+      - name: Generate allure report
+        run: npx allure generate allure-results --clean

@@ -1,0 +1,74 @@
+name: Playwright Mobile Chrome Regression Tests BETA
+
+on:
+  workflow_dispatch:
+    inputs:
+      ALLURE_JOB_RUN_ID:
+        description: Mobile Chrome - Regression Tests BETA
+      ALLURE_USERNAME:
+        description:
+        required: false
+
+env:
+  ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+  ALLURE_JOB_RUN_ID: ${{ github.event.inputs.ALLURE_JOB_RUN_ID }}
+  ALLURE_ENDPOINT: https://mamyito.testops.cloud/
+  ALLURE_PROJECT_ID: 1
+  ALLURE_RESULTS: "allure-results"
+  ALLURE_LAUNCH_NAME: "Mobile Chrome - Regression Tests BETA"
+  GITHUB-TOKEN: ${{ secrets.ALLURE_GITHUB_TOKEN }}
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    env:
+      URL: ${{ secrets.BETA_URL_SECRET }}
+      APIURL: ${{ secrets.BETA_APIURL_SECRET }}
+      EMAIL: ${{ secrets.EMAIL_SECRET_SECOND }}
+      PASSWORD: ${{ secrets.PASSWORD_SECRET_SECOND }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          check-latest: true
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Clear Playwright Cache and Reinstall
+        run: |
+          rm -rf ~/.cache/ms-playwright
+          npm uninstall @playwright/test playwright
+          npm install @playwright/test playwright
+          npx playwright install --force
+          npx playwright install-deps
+
+      - name: Install dependencies for playwright and allure framework integration
+        run: |
+          npm install -D allure-playwright
+
+      - name: install and configure allurectl using GH Action
+        uses: allure-framework/setup-allurectl@v1
+
+      - name: Run Playwright tests for Mobile Chrome with Allure
+        run: allurectl watch -- npx playwright test --max-failures=0 --project="Mobile Chrome" --grep "@Beta"
+        env:
+          CI: 'true'
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 1
+
+      - name: Generate Allure Report
+        run: npx allure generate allure-results --clean

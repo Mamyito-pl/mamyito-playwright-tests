@@ -40,6 +40,10 @@ export default class OrderEditPage {
         return this.getConfirmationEditOrderCartModalCancelButton.click();
     }
 
+    async clickEditCartReservationButton() {
+        return this.getEditCartReservationButton.click();
+    }
+
     get getEditOrderModalTitle() {
         return this.page.locator('div[data-sentry-element="Modal"] div').first().getByText('Edycja zamówienia');
     }
@@ -58,6 +62,10 @@ export default class OrderEditPage {
 
     get getCancelEditOrderModalButton() {
         return this.page.locator('#repeat_order_cancel_button');
+    }
+
+    get getEditCartReservationButton() {
+        return this.page.getByRole('button', { name: 'Edytuj'});
     }
 
     get getApplyEditOrderCartButton() {
@@ -89,7 +97,7 @@ export default class OrderEditPage {
     }
 
     get getConfirmationEditOrderModal() {
-        return this.page.locator('#modal-portal div div').first();  
+        return this.page.locator('#modal-portal')
     }
 
     get getEnterBlikCodeModalTitle() {

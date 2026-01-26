@@ -31,7 +31,7 @@ Follow the steps below to prepare the project and run Playwright tests locally.
 
 ### Run regression tests for chromium web on BETA
 
-   Na becie muszą się znajdować dwa kody rabatowe. Procentowy i kwotowy na 10% i 10zł. Z nazwami kolejno KP10 i KK10.
+   Na becie muszą się znajdować dwa kody rabatowe. Procentowy i kwotowy na 10% i 10zł. Z nazwami (pole Kod rabatowy) kolejno KP10 i KK10.
 
    `npx playwright test --max-failures=0 --project="chromium" --retries=2 --grep "@Beta"`
 

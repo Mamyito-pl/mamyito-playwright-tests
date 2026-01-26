@@ -66,8 +66,6 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await allure.suite('Testy szczegółów zamówienia');
     await allure.subSuite('');
     await allure.allureId('2221');
-
-    test.skip(`${process.env.URL}` == 'https://mamyito.pl', 'Test wymaga złożenia zamówienia');
   
     test.setTimeout(150000);
 
@@ -197,8 +195,6 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await allure.suite('Testy szczegółów zamówienia');
     await allure.subSuite('');
     await allure.allureId('2397');
-
-    test.skip(`${process.env.URL}` == 'https://mamyito.pl', 'Test wymaga złożenia zamówienia');
   
     test.setTimeout(345000);
 
@@ -349,7 +345,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     });
   })
 
-  test('M | Możliwość ponownego zamówienia po złożeniu prawidłowego zamówienia', { tag: ['@Beta', '@Test', '@Prod'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
+  test('M | Możliwość ponownego zamówienia po złożeniu prawidłowego zamówienia', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');
@@ -357,8 +353,6 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await allure.suite('Testy szczegółów zamówienia');
     await allure.subSuite('');
     await allure.allureId('2398');
-
-    test.skip(`${process.env.URL}` == 'https://mamyito.pl', 'Test wymaga złożenia zamówienia');
 
     test.setTimeout(350000);
 
@@ -460,8 +454,6 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await allure.suite('Testy szczegółów zamówienia');
     await allure.subSuite('');
     await allure.allureId('2399');
-
-    test.skip(`${process.env.URL}` == 'https://mamyito.pl', 'Test wymaga złożenia zamówienia');
 
     test.setTimeout(350000);
 

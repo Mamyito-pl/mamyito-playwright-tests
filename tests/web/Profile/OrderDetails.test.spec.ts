@@ -66,8 +66,6 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await allure.suite('Testy szczegółów zamówienia');
     await allure.subSuite('');
     await allure.allureId('2222');
-
-    test.skip(`${process.env.URL}` == 'https://mamyito.pl', 'Test wymaga złożenia zamówienia');
   
     test.setTimeout(150000);
 
@@ -185,8 +183,6 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await allure.suite('Testy szczegółów zamówienia');
     await allure.subSuite('');
     await allure.allureId('2402');
-
-    test.skip(`${process.env.URL}` == 'https://mamyito.pl', 'Test wymaga złożenia zamówienia');
   
     test.setTimeout(345000);
 
@@ -328,7 +324,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     });
   })
       
-  test('W | Możliwość ponownego zamówienia po złożeniu prawidłowego zamówienia', { tag: ['@Beta', '@Test', '@Prod'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
+  test('W | Możliwość ponownego zamówienia po złożeniu prawidłowego zamówienia', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');
@@ -336,8 +332,6 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await allure.suite('Testy szczegółów zamówienia');
     await allure.subSuite('');
     await allure.allureId('2403');
-
-    test.skip(`${process.env.URL}` == 'https://mamyito.pl', 'Test wymaga złożenia zamówienia');
 
     test.setTimeout(350000);
 
@@ -420,7 +414,6 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await expect(commonPage.getCartProductsCount).toBeVisible({ timeout: 5000 });
     await expect(commonPage.getCartProductsPrice).toBeVisible({ timeout: 5000 });
   })
-
           
   test('W | Możliwość ponownego zamówienia po złożeniu zamówienia z błędną płatnością', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI }) => {
 
@@ -430,8 +423,6 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await allure.suite('Testy szczegółów zamówienia');
     await allure.subSuite('');
     await allure.allureId('2404');
-
-    test.skip(`${process.env.URL}` == 'https://mamyito.pl', 'Test wymaga złożenia zamówienia');
 
     test.setTimeout(350000);
 

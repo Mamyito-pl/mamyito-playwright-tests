@@ -189,7 +189,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     });
   })
   
-  test.skip('M | Zamówienie po błędnej płatności powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
+  test('M | Zamówienie po błędnej płatności powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');

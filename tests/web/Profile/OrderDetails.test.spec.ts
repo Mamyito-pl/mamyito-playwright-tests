@@ -177,7 +177,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     });
   })
 
-  test.skip('W | Zamówienie po błędnej płatności powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
+  test('W | Zamówienie po błędnej płatności powinno wyświetlić się ze wszystkimi wymaganymi polami', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');

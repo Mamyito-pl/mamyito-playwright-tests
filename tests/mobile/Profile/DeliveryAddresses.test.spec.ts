@@ -42,9 +42,7 @@ test.describe('Testy adresy dostaw', async () => {
     await expect(deliveryAddressesPage.getAddNewAddressButton).toBeVisible();
   })
 
-  test.skip('M | Możliwość dodania adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
-
-    // UNSKIP BELOW TESTS AFTER CACHE FIX
+  test('M | Możliwość dodania adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');
@@ -110,7 +108,7 @@ test.describe('Testy adresy dostaw', async () => {
     await page.waitForSelector('text=Adres Testowy', { state: 'visible' });
   })
 
-  test.skip('M | Możliwość ustawienia głównego adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, addAddressDelivery }) => {
+  test('M | Możliwość ustawienia głównego adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');
@@ -150,7 +148,7 @@ test.describe('Testy adresy dostaw', async () => {
     await expect(deliveryAddressesPage.getMainAddressInfo('Adres Fixturowy')).not.toBeAttached();
   })
 
-  test.skip('M | Możliwość edycji adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, addAddressDelivery }) => {
+  test('M | Możliwość edycji adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');
@@ -236,7 +234,7 @@ test.describe('Testy adresy dostaw', async () => {
     await expect(deliveryAddressesPage.getAddressModalUserDeliveryNotes).toHaveValue('Edytowana testowa notatka');
   })
   
-  test.skip('M | Możliwość usunięcia adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, addAddressDelivery }) => {
+  test('M | Możliwość usunięcia adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');

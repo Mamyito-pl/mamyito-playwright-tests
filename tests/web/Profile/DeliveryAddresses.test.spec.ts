@@ -44,9 +44,7 @@ test.describe('Testy adresy dostaw', async () => {
     await expect(deliveryAddressesPage.getAddNewAddressButton).toBeVisible();
   })
 
-  test.skip('W | Możliwość dodania adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
-
-    // UNSKIP BELOW TESTS AFTER CACHE FIX
+  test('W | Możliwość dodania adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');
@@ -112,7 +110,7 @@ test.describe('Testy adresy dostaw', async () => {
     await page.waitForSelector('text=Adres Testowy', { state: 'visible' });
   })
 
-  test.skip('W | Możliwość ustawienia głównego adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, addAddressDelivery }) => {
+  test('W | Możliwość ustawienia głównego adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, addAddressDelivery }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');
@@ -152,7 +150,7 @@ test.describe('Testy adresy dostaw', async () => {
     await expect(deliveryAddressesPage.getMainAddressInfo('Adres Fixturowy')).not.toBeAttached();
   })
 
-  test.skip('W | Możliwość edycji adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, addAddressDelivery }) => {
+  test('W | Możliwość edycji adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, addAddressDelivery }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');
@@ -238,7 +236,7 @@ test.describe('Testy adresy dostaw', async () => {
     await expect(deliveryAddressesPage.getAddressModalUserDeliveryNotes).toHaveValue('Edytowana testowa notatka');
   })
   
-  test.skip('W | Możliwość usunięcia adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, addAddressDelivery }) => {
+  test('W | Możliwość usunięcia adresu dostawy', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, addAddressDelivery }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');

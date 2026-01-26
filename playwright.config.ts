@@ -103,7 +103,7 @@ export default defineConfig({
       name: 'Performance',
       testDir: './tests/performance-tests',
       use: {
-        browserName: 'firefox',
+        browserName: 'chromium',
         baseURL: process.env.URL,
       },
     },

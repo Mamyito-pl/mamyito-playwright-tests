@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { Page, expect } from "@playwright/test";
 import * as selectors from '../utils/selectors.json';
 import { isMobile } from '../utils/utility-methods.ts';
 
@@ -38,6 +38,13 @@ export default class Przelewy24Page {
 
     async clickBackToShopButton() {
         await this.getBackToShopButton.click();
+    }
+
+    async payWithDpay() {
+        await expect(this.page).toHaveURL(new RegExp('^https://secure.dpay.pl/transfer@pay@'));
+        await this.clickPayButton();
+        await expect(this.page).toHaveURL(new RegExp('^https://secure.dpay.pl/transfer@test@'));
+        await this.clickBackToShopButton();
     }
 
     get getBackToShopButton() {

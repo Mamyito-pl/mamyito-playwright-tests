@@ -1,10 +1,10 @@
-name: Playwright Mobile Chrome Tests BETA
+name: Playwright Mobile Chrome Smoke Tests BETA
 
 on:
   workflow_dispatch:
     inputs:
       ALLURE_JOB_RUN_ID:
-        description: Mobile Chrome - Tests BETA
+        description: Mobile Chrome - Smoke Tests BETA
       ALLURE_USERNAME:
         description:
         required: false
@@ -15,7 +15,7 @@ env:
   ALLURE_ENDPOINT: https://mamyito.testops.cloud/
   ALLURE_PROJECT_ID: 1
   ALLURE_RESULTS: "allure-results"
-  ALLURE_LAUNCH_NAME: "Mobile Chrome - Tests BETA"
+  ALLURE_LAUNCH_NAME: "Mobile Chrome - Smoke Tests BETA"
   GITHUB-TOKEN: ${{ secrets.ALLURE_GITHUB_TOKEN }}
 
 
@@ -59,7 +59,7 @@ jobs:
         uses: allure-framework/setup-allurectl@v1
 
       - name: Run Playwright tests for Mobile Chrome with Allure
-        run: allurectl watch -- npx playwright test --max-failures=0 --project="Mobile Chrome" --grep "@Beta"
+        run: allurectl watch -- npx playwright test --max-failures=0 --project="Mobile Chrome" --grep "@Smoke"
         env:
           CI: 'true'
 

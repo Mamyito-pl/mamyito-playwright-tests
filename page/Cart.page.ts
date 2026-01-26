@@ -205,11 +205,11 @@ export default class CartPage {
     }
 
     get getProductNames() {
-        return this.page.locator('div[data-sentry-element="InsideWrapper"] a div[class*="sc-a15683e8-2"]');
+        return this.page.locator(selectors.CartPage.common.productCartListName);
     }
 
     get getProductQuantities() {
-        return this.page.locator(this.mobile ? 'div[data-sentry-element="TabletContent"] div[data-sentry-element="StyledProductQuantityInput"] div input' : 'div[data-sentry-element="InsideWrapper"] div[data-sentry-element="StyledProductQuantityInput"] div input');
+        return this.page.locator(this.mobile ? 'div[data-sentry-element="TabletContent"] [data-sentry-element="ProductQuantityInput"] input' : 'div[data-sentry-element="InsideWrapper"] [data-sentry-element="ProductQuantityInput"] input');
     }
 
     get getProductPrices() {

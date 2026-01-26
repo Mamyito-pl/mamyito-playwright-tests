@@ -1,0 +1,41 @@
+{
+    "defaultDeliveryAddress": {
+      "city": "Warszawa",
+      "first_name": "Jan",
+      "last_name": "Kowalski",
+      "house_number": "1",
+      "icon_color": "#ffa31a",
+      "icon_type": "home",
+      "is_default": false,
+      "latitude": 11,
+      "longitude": 11,
+      "phone_number": "555666777",
+      "postal_code": "00-828",
+      "street": "aleja Jana Pawła II",
+      "staircase_number": "1",
+      "flat_number": "30",
+      "type": "delivery",
+      "client_delivery_notes": "Testowa notatka",
+      "floor": "2"
+    },
+  
+    "alternativeDeliveryAddress": {
+      "city": "Lesznowola",
+      "first_name": "Janina",
+      "last_name": "Kowalska",
+      "house_number": "103",
+      "icon_color": "#ffa31a",
+      "icon_type": "home",
+      "is_default": false,
+      "latitude": 11,
+      "longitude": 11,
+      "phone_number": "666555444",
+      "postal_code": "05-506",
+      "street": "Oficerska",
+      "staircase_number": "4",
+      "flat_number": "103",
+      "type": "delivery",
+      "client_delivery_notes": "Testowa notatka",
+      "floor": "2"
+    }
+}

@@ -1,13 +1,18 @@
-name: Playwright Web Tests TEST
+name: Playwright Web Chrome Smoke Tests BETA
 
 on:
   workflow_dispatch:
     inputs:
       ALLURE_JOB_RUN_ID:
-        description: Web - Dzienny raport testów automatycznych na środowisku TEST
+        description: Web Chrome - Smoke Tests BETA
       ALLURE_USERNAME:
         description:
         required: false
+  workflow_run:
+    workflows:
+      - "Playwright Mobile Chrome Smoke Tests BETA"
+    types:
+      - completed
 
 env:
   ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
@@ -15,7 +20,7 @@ env:
   ALLURE_ENDPOINT: https://mamyito.testops.cloud/
   ALLURE_PROJECT_ID: 1
   ALLURE_RESULTS: "allure-results"
-  ALLURE_LAUNCH_NAME: "Web - Dzienny raport testów automatycznych na środowisku TEST"
+  ALLURE_LAUNCH_NAME: "Web Chrome - Smoke Tests BETA"
   GITHUB-TOKEN: ${{ secrets.ALLURE_GITHUB_TOKEN }}
 
 jobs:
@@ -25,7 +30,8 @@ jobs:
       contents: read
       actions: read
     env:
-      URL: ${{ secrets.TEST_URL_SECRET }}
+      URL: ${{ secrets.BETA_URL_SECRET }}
+      APIURL: ${{ secrets.BETA_APIURL_SECRET }}
       EMAIL: ${{ secrets.EMAIL_SECRET }}
       PASSWORD: ${{ secrets.PASSWORD_SECRET }}
     steps:
@@ -42,32 +48,19 @@ jobs:
         run: npm ci
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
 
       - name: Install dependencies for playwright and allure framework integration
         run: |
           npm install -D allure-playwright
 
-      - name: Install and configure allurectl using Github Actions
+      - name: install and configure allurectl using GH Action
         uses: allure-framework/setup-allurectl@v1
 
       - name: Run Playwright tests for Web Chrome with Allure
-        run: allurectl watch -- npx playwright test --max-failures=0 --project="chromium"
+        run: allurectl watch -- npx playwright test --max-failures=0 --project="chromium" --grep "@Smoke"
         env:
           CI: 'true'
-        continue-on-error: true
-
-      - name: Run Playwright tests for Web Firefox with Allure
-        run: allurectl watch -- npx playwright test --max-failures=0 --project="firefox"
-        env:
-          CI: 'true'
-        continue-on-error: true
-
-      - name: Run Playwright tests for Web Safari with Allure
-        run: allurectl watch -- npx playwright test --max-failures=0 --project="webkit"
-        env:
-          CI: 'true'
-        continue-on-error: true
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
@@ -75,6 +68,6 @@ jobs:
           name: allure-results
           path: allure-results/
           retention-days: 1
-          
+
       - name: Generate allure report
         run: npx allure generate allure-results --clean

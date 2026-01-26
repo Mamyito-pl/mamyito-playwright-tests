@@ -1,18 +1,13 @@
-name: Playwright Web Firefox Tests TEST
+name: Playwright Mobile Chrome Regression Tests BETA
 
 on:
   workflow_dispatch:
     inputs:
       ALLURE_JOB_RUN_ID:
-        description: Web Firefox - Dzienny raport testów automatycznych na środowisku TEST
+        description: Mobile Chrome - Regression Tests BETA
       ALLURE_USERNAME:
         description:
         required: false
-  workflow_run:
-    workflows:
-      - "Playwright Web Safari Tests TEST"
-    types:
-      - completed
 
 env:
   ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
@@ -20,7 +15,9 @@ env:
   ALLURE_ENDPOINT: https://mamyito.testops.cloud/
   ALLURE_PROJECT_ID: 1
   ALLURE_RESULTS: "allure-results"
-  ALLURE_LAUNCH_NAME: "Web Firefox - Dzienny raport testów automatycznych na środowisku TEST"
+  ALLURE_LAUNCH_NAME: "Mobile Chrome - Regression Tests BETA"
+  GITHUB-TOKEN: ${{ secrets.ALLURE_GITHUB_TOKEN }}
+
 
 jobs:
   test:
@@ -29,9 +26,10 @@ jobs:
       contents: read
       actions: read
     env:
-      URL: ${{ secrets.TEST_URL_SECRET }}
-      EMAIL: ${{ secrets.EMAIL_SECRET }}
-      PASSWORD: ${{ secrets.PASSWORD_SECRET }}
+      URL: ${{ secrets.BETA_URL_SECRET }}
+      APIURL: ${{ secrets.BETA_APIURL_SECRET }}
+      EMAIL: ${{ secrets.EMAIL_SECRET_SECOND }}
+      PASSWORD: ${{ secrets.PASSWORD_SECRET_SECOND }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,8 +43,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      - name: Clear Playwright Cache and Reinstall
+        run: |
+          rm -rf ~/.cache/ms-playwright
+          npm uninstall @playwright/test playwright
+          npm install @playwright/test playwright
+          npx playwright install --force
+          npx playwright install-deps
 
       - name: Install dependencies for playwright and allure framework integration
         run: |
@@ -54,14 +57,9 @@ jobs:
 
       - name: install and configure allurectl using GH Action
         uses: allure-framework/setup-allurectl@v1
-        with:
-          allure-endpoint: https://mamyito.testops.cloud
-          allure-token: ${{ secrets.ALLURE_TOKEN }}
-          allure-project-id: 1
-          github-token:  ${{ secrets.ALLURE_GITHUB_TOKEN }}
 
-      - name: Run Playwright tests for Web Firefox with Allure
-        run: allurectl watch -- npx playwright test --max-failures=0 --project="firefox"
+      - name: Run Playwright tests for Mobile Chrome with Allure
+        run: allurectl watch -- npx playwright test --max-failures=0 --project="Mobile Chrome" --grep "@Beta"
         env:
           CI: 'true'
 
@@ -72,5 +70,5 @@ jobs:
           path: allure-results/
           retention-days: 1
 
-      - name: Generate allure report
+      - name: Generate Allure Report
         run: npx allure generate allure-results --clean

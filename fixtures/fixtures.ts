@@ -10,6 +10,7 @@ import ProductsListPage from '../page/ProductsList.page.ts';
 import * as selectors from '../utils/selectors.json';
 import * as utility from '../utils/utility-methods';
 import InvoiceAddressesPage from '../page/Profile/InvoiceAddresses.page.ts';
+import * as addressesData from '../test-data/addresses.json';
 
 let loginPage: LoginPage;
 let mainLogoutPage: MainLogoutPage;
@@ -30,7 +31,7 @@ type MyFixtures = {
     smsConsentViaAPI: (consent: boolean) => Promise<void>;
     searchProduct: (productName: any) => Promise<void>;
     addProduct: (product: any) => Promise<void>;
-    addAddressDelivery: (addressName: any) => Promise<void>;
+    addAddressDelivery: (addressName: string, addressType?: 'defaultDeliveryAddress' | 'alternativeDeliveryAddress') => Promise<void>;
     addAddressDeliveryViaAPI: (addressName: any) => Promise<void>;
     addSecondAddressDeliveryViaAPI: (addressName: any) => Promise<void>;
     deleteAddressDelivery: (addressName: any) => Promise<void>;
@@ -371,28 +372,49 @@ export const test = baseTest.extend<MyFixtures>({
 
     deliveryPage = new DeliveryPage(page);
 
-    const addAddressDelivery = async (addressName: string) => {
+    const addAddressDelivery = async (addressName: string, addressType: 'defaultDeliveryAddress' | 'alternativeDeliveryAddress' = 'defaultDeliveryAddress'): Promise<void> => {
+      
+      // Jeśli pierwszy parametr to typ adresu, użyj go jako addressType
+      let finalAddressType: 'defaultDeliveryAddress' | 'alternativeDeliveryAddress';
+      let finalAddressName: string;
+      
+      if (addressName === 'defaultDeliveryAddress' || addressName === 'alternativeDeliveryAddress') {
+        // Pierwszy parametr to typ adresu - użyj go jako addressType
+        finalAddressType = addressName;
+        finalAddressName = finalAddressType === 'defaultDeliveryAddress' ? 'Adres Testowy' : 'Adres Drugi';
+      } else {
+        // Pierwszy parametr to nazwa adresu - użyj przekazanego addressType lub domyślnego
+        finalAddressName = addressName;
+        finalAddressType = addressType;
+      }
+      
+      // Pobierz dane adresu z pliku JSON na podstawie typu - użyj rzutowania typu dla TypeScript
+      const addressData = (addressesData as Record<string, any>)[finalAddressType];
+      
+      if (!addressData) {
+        throw new Error(`Address data not found for type: ${finalAddressType}`);
+      }
 
       await expect(deliveryPage.getAddNewAddressButton).toBeVisible();
       await deliveryPage.clickAddNewAddressButton();
       await page.waitForSelector('div[data-sentry-element="Modal"]', { state: 'visible', timeout: 10000 });
       await expect(deliveryPage.getAddressModal).toBeVisible();
-      await deliveryPage.getAddressModalAddressName.fill(addressName);
-      await deliveryPage.getAddressModalUserName.fill('Jan');
-      await deliveryPage.getAddressModalUserSurname.fill('Kowalski')
-      await deliveryPage.getAddressModalUserPhoneNumber.fill('555666777');
-      await deliveryPage.getAddressModalUserPostalCode.fill('00-828');
-      await deliveryPage.getAddressModalUserCity.fill('Warszawa');
-      await deliveryPage.getAddressModalUserStreet.fill('aleja Jana Pawła II');
-      await deliveryPage.getAddressModalUserHouseNumber.fill('1');
-      await deliveryPage.getAddressModalUserStaircase.fill('1');
-      await deliveryPage.getAddressModalUserFlatNumber.fill('30');
-      await deliveryPage.getAddressModalUserFloor.fill('2');
-      await deliveryPage.getAddressModalUserDeliveryNotes.fill('Testowa notatka');
+      await deliveryPage.getAddressModalAddressName.fill(finalAddressName);
+      await deliveryPage.getAddressModalUserName.fill(addressData.first_name);
+      await deliveryPage.getAddressModalUserSurname.fill(addressData.last_name);
+      await deliveryPage.getAddressModalUserPhoneNumber.fill(addressData.phone_number);
+      await deliveryPage.getAddressModalUserPostalCode.fill(addressData.postal_code);
+      await deliveryPage.getAddressModalUserCity.fill(addressData.city);
+      await deliveryPage.getAddressModalUserStreet.fill(addressData.street);
+      await deliveryPage.getAddressModalUserHouseNumber.fill(addressData.house_number);
+      await deliveryPage.getAddressModalUserStaircase.fill(addressData.staircase_number);
+      await deliveryPage.getAddressModalUserFlatNumber.fill(addressData.flat_number);
+      await deliveryPage.getAddressModalUserFloor.fill(addressData.floor);
+      await deliveryPage.getAddressModalUserDeliveryNotes.fill(addressData.client_delivery_notes);
       await deliveryPage.clickSaveAdressModalButton();
       await page.waitForTimeout(3000)
       
-      await page.getByText(addressName).isVisible();
+      await page.getByText(finalAddressName).isVisible();
     };
     await use(addAddressDelivery);
   },

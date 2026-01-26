@@ -18,7 +18,7 @@ export default class MainPage {
     }
 
     get getDeliveryButton() {
-        return this.page.locator(this.mobile ? 'div[data-sentry-element="TabletContent"] svg[data-sentry-element="IconTruckDelivery"]' : 'a[data-sentry-element="TimerWrapper"]')
+        return this.page.locator(this.mobile ? 'div[data-sentry-element="TabletContent"] svg[data-sentry-element="IconTruckDelivery"]' : '[data-sentry-element="TimerWrapper"]')
     }
 
     get getProfileButton() {

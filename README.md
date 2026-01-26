@@ -8,7 +8,7 @@ Follow the steps below to prepare the project and run Playwright tests locally.
 
    `npm install`
 
-   `npx playwright install`
+   `npm init playwright@latest`
 
 ### Set environment variables:
 

@@ -1201,7 +1201,7 @@ test.describe('Testy edycji zamówienia', async () => {
 
   test.describe('Edycja zamówienia z dopłatą', async () => {
 
-    test('M | Dopłata do zamówienia Blikiem z pełną manipulacją produktów w koszyku', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, browser, addAddressDelivery }) => {
+    test('M | Dopłata do zamówienia DPAY z pełną manipulacją produktów w koszyku', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, browser, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Edycja zamówienia');
     await allure.epic('Mobilne');
@@ -1246,8 +1246,7 @@ test.describe('Testy edycji zamówienia', async () => {
     await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
     await page.waitForLoadState('load');
     await page.waitForTimeout(2000);
-    await paymentsPage.waitForLoaderAndSelectPaymentMethod('Kod BLIK');
-    await paymentsPage.enterBlikCode('777111');
+    await paymentsPage.waitForLoaderAndSelectPaymentMethod('Płatność kartą online');
     await paymentsPage.checkStatue();
     const summaryPrice = parseFloat((await cartPage.getTotalSummaryValue.textContent() || '0')
     .replace(/[^0-9,.]/g, '')
@@ -1255,6 +1254,8 @@ test.describe('Testy edycji zamówienia', async () => {
     console.log(summaryPrice);
     await cartPage.clickCartPaymentConfirmationButton();
     await cartPage.waitForPaymentConfirmationButton();
+
+    await przelewy24Page.payWithDpay();
 
     await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/podsumowanie'), { timeout: 20000 });
     await expect(page.getByText('Przetwarzanie płatności....')).toBeVisible({ timeout: 20000 });
@@ -1479,249 +1480,6 @@ test.describe('Testy edycji zamówienia', async () => {
     expect(finalPrice).toBe(summaryPriceAfterChanges);
     })
 
-    test('M | Dopłata do zamówienia przelewem', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery }) => {
-      
-      await allure.tags('Mobilne', 'Edycja zamówienia');
-      await allure.epic('Mobilne');
-      await allure.parentSuite('Profil');
-      await allure.suite('Testy edycji zamówienia');
-      await allure.subSuite('Edycja zamówienia z dopłatą');
-      await allure.allureId('2451');
-
-      test.skip(`${process.env.URL}` == 'https://mamyito.pl', 'Test wymaga złożenia zamówienia');
-      
-      test.setTimeout(150000);
-  
-      await addProduct(product);
-  
-      await searchbarPage.getProductItemCount.first().click();
-      await page.waitForTimeout(1000);
-      await searchbarPage.getProductItemCount.first().type('1');
-      await commonPage.getCartButton.click();
-      await page.waitForTimeout(1000);
-  
-      await page.goto('/koszyk', { waitUntil: 'load'});
-      await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
-      await cartPage.clickCartSummaryButton();
-      await page.waitForLoadState('load');
-      await page.waitForTimeout(2000);
-      await paymentsPage.closeAddressModal();
-      await addAddressDelivery('Adres Testowy');
-      await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
-      await deliveryPage.getDeliverySlotButton.first().click();
-      await cartPage.clickCartSummaryPaymentButton();
-      await deliveryPage.clickConfirmReservationButton();
-      await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
-      await page.waitForLoadState('load');
-      await paymentsPage.waitForLoaderAndSelectPaymentMethod('Przelew online');
-      await paymentsPage.checkStatue();
-      await page.waitForTimeout(1000);
-      const summaryPrice = parseFloat((await cartPage.getTotalSummaryValue.textContent() || '0')
-      .replace(/[^0-9,.]/g, '')
-      .replace(',', '.'));
-      console.log(summaryPrice);
-      await cartPage.clickCartPaymentConfirmationButton();
-      await cartPage.waitForPaymentConfirmationButton();
-  
-      await expect(page).toHaveURL(new RegExp('^https://sandbox-go.przelewy24.pl/trnRequest/'), { timeout: 15000 });
-      await przelewy24Page.clickMainTransferButton();
-      await przelewy24Page.clickChosenTransferButton();
-      await expect(page).toHaveURL(new RegExp('^https://vsa.przelewy24.pl/pl/payment'), { timeout: 15000 });
-      await page.waitForTimeout(1000);
-
-      const expectedUrlPattern = /^https:\/\/sandbox-go\.przelewy24\.pl\/trnResult\//;
-      const maxTries = 5;
-      let urlChanged = false;
-
-      for (let i = 0; i < maxTries; i++) {
-        await przelewy24Page.clickPayButton();
-        await page.waitForTimeout(1000);
-
-        const currentUrl = page.url();
-        if (expectedUrlPattern.test(currentUrl)) {
-          urlChanged = true;
-          break;
-        }
-      }
-
-      expect(urlChanged).toBe(true);
-
-      await przelewy24Page.clickBackToShopButton();
-      await page.waitForTimeout(2000);
-  
-      await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/podsumowanie'), { timeout: 20000 });
-      await expect(page.getByText('Nr zamówienia: ')).toBeVisible();
-      await expect(paymentsPage.getOrderDetailsButton).toBeVisible();
-      await expect(paymentsPage.getRepeatOrderButton).toBeVisible();
-      await expect(paymentsPage.getBackHomeButton).toBeVisible();
-  
-      await paymentsPage.clickOrderDetailsButton();
-  
-      await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/profil/zamowienia\\?order=.*'), { timeout: 30000 });
-  
-      await expect(orderDetailsPage.getEditOrderButton).toBeVisible({ timeout: 10000 });
-  
-      const productNames = await orderDetailsPage.getProductNames.all();
-      const productQuantities = await orderDetailsPage.getProductQuantity.all();
-  
-      const initialProducts: { name: string | undefined; quantity: number; }[] = [];
-  
-      for (let i = 0; i < productNames.length; i++) {
-      const name = await productNames[i].textContent();
-      const quantity = await productQuantities[i].textContent();
-      
-      initialProducts.push({
-          name: name?.trim(),
-          quantity: parseFloat(quantity?.trim() || '0'),
-        });
-        await page.waitForTimeout(1000);
-      }
-  
-      console.log(initialProducts);
-      
-      await orderDetailsPage.clickEditOrderButton();
-      await expect(orderEditPage.getEditOrderModalTitle).toBeVisible({ timeout: 10000 });
-      await expect(orderEditPage.getApplyEditOrderModalButton).toBeVisible({ timeout: 10000 });
-      await orderEditPage.clickApplyEditOrderModalButton();
-      await expect(orderEditPage.getEditOrderModalTitle).not.toBeVisible({ timeout: 10000 });
-    
-      await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
-
-      const notificationButton = page.getByText('Produkty dodane do koszyka nie są zarezerwowane').locator('..').locator('..').locator('button');
-      const notificationButtonIsVisible = await notificationButton.isVisible();
-
-      if (notificationButtonIsVisible) {
-        await notificationButton.click();
-      } else {
-        return;
-      }
-  
-      const productNamesCart = await cartPage.getProductNames.all();
-      const productQuantitiesCart = await cartPage.getProductQuantities.all();
-  
-      const initialProductsCart: { name: string | undefined; quantity: number; }[] = [];
-  
-      for (let i = 0; i < productNamesCart.length; i++) {
-        const name = await productNamesCart[i].textContent();
-        const quantity = await productQuantitiesCart[i].inputValue();
-        
-        initialProductsCart.push({
-          name: name?.trim(),
-          quantity: parseFloat(quantity?.trim() || '0'),
-        });
-      }
-  
-      console.log(initialProductsCart);
-  
-      expect(initialProducts).toEqual(initialProductsCart);
-  
-      await page.locator('div[data-sentry-element="TabletContent"] svg[class*="tabler-icon tabler-icon-plus"]').first().click();
-      await page.waitForTimeout(5000);
-  
-      const productNamesCartAfterChanges = await cartPage.getProductNames.all();
-      const productQuantitiesCartAfterChanges = await cartPage.getProductQuantities.all();
-  
-      const initialProductsCartAfterChanges: { name: string | undefined; quantity: number; }[] = [];
-  
-      for (let i = 0; i < productNamesCartAfterChanges.length; i++) {
-        const name = await productNamesCartAfterChanges[i].textContent();
-        const quantity = await productQuantitiesCartAfterChanges[i].inputValue();
-        
-        initialProductsCartAfterChanges.push({
-          name: name?.trim(),
-          quantity: parseFloat(quantity?.trim() || '0'),
-        });
-      }
-  
-      console.log(initialProductsCartAfterChanges);
-  
-      const summaryPriceAfterChanges = parseFloat((await cartPage.getTotalSummaryValue.textContent() || '0')
-          .replace(/[^0-9,.]/g, '')
-          .replace(',', '.'));
-  
-      console.log(summaryPriceAfterChanges);
-  
-      const priceDifference = Math.abs((summaryPriceAfterChanges - summaryPrice)).toFixed(2).replace(/\.?0+$/, '');
-      console.log('Różnica w cenie:', priceDifference);
-
-      await expect(orderEditPage.getApplyEditOrderCartButton).toBeVisible({ timeout: 50000 });
-      await orderEditPage.clickApplyEditOrderCartButton();
-  
-      await expect(orderEditPage.getConfirmationEditOrderCartModalTitle).toBeVisible({ timeout: 15000 });
-      const button = page.getByRole('button', { name: `Do dopłaty ${priceDifference} zł`});
-      await expect(button).toBeVisible({ timeout: 5000 });
-      await page.mouse.move(960, 540);
-      await page.mouse.wheel(0, 1500);
-      await page.waitForTimeout(700);
-      await button.click({ force: true });
-  
-      await expect(page).toHaveURL(new RegExp('^https://sandbox-go.przelewy24.pl/trnRequest/'), { timeout: 15000 });
-      await przelewy24Page.clickMainTransferButton();
-      await przelewy24Page.clickChosenTransferButton();
-      await expect(page).toHaveURL(new RegExp('^https://vsa.przelewy24.pl/pl/payment'), { timeout: 15000 });
-      await page.waitForTimeout(1000);
-
-      for (let i = 0; i < maxTries; i++) {
-        await przelewy24Page.clickPayButton();
-        await page.waitForTimeout(1000);
-
-        const currentUrl = page.url();
-        if (expectedUrlPattern.test(currentUrl)) {
-          urlChanged = true;
-          break;
-        }
-      }
-
-      expect(urlChanged).toBe(true);
-
-      await przelewy24Page.clickBackToShopButton();
-      await page.waitForTimeout(2000);
-  
-      await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/podsumowanie'), { timeout: 30000 });
-      await expect(page.getByText('Edytowano zamówienie', { exact: true })).toBeVisible({ timeout: 30000 });
-      await expect(page.getByText('Nr zamówienia: ')).toBeVisible();
-      await expect(paymentsPage.getOrderDetailsButton).toBeVisible();
-      await expect(paymentsPage.getRepeatOrderButton).toBeVisible();
-      await expect(paymentsPage.getBackHomeButton).toBeVisible();
-  
-      await paymentsPage.clickOrderDetailsButton();
-      await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/profil/zamowienia\\?order=.*'), { timeout: 30000 });
-  
-      await expect(orderDetailsPage.getBackToOrdersButton).toBeVisible({ timeout: 15000 });
-      await expect(orderDetailsPage.getRepeatOrderButton).toBeVisible({ timeout: 15000 });
-      
-      await expect(orderDetailsPage.getEditOrderButton).not.toBeVisible({ timeout: 10000 });
-  
-      const productNamesAfterEdit = await orderDetailsPage.getProductNames.all();
-      const productQuantitiesAfterEdit = await orderDetailsPage.getProductQuantity.all();
-  
-      const initialProductsAfterEdit: { name: string | undefined; quantity: number; }[] = [];
-  
-      for (let i = 0; i < productNamesAfterEdit.length; i++) {
-      const name = await productNamesAfterEdit[i].textContent();
-      const quantity = await productQuantitiesAfterEdit[i].textContent();
-      
-      initialProductsAfterEdit.push({
-          name: name?.trim(),
-          quantity: parseFloat(quantity?.trim() || '0'),
-        });
-        await page.waitForTimeout(1000);
-      }
-  
-      console.log(initialProductsAfterEdit);
-  
-      expect(initialProductsCartAfterChanges).toEqual(initialProductsAfterEdit);
-  
-      expect(productNamesAfterEdit.length).toBe(1);
-
-      await expect(page.getByText('Metoda płatności').locator('..').locator('div').last()).toContainText('Przelewy24');
-
-      const finalPrice = parseFloat((await page.getByText('Kwota').locator('..').locator('div').last().textContent() || '0')
-        .replace(/[^0-9,.]/g, '')
-        .replace(',', '.'));
-      expect(finalPrice).toBe(summaryPriceAfterChanges);
-    })
-
     test('M | Dopłata do zamówienia kartą przy odbiorze', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery }) => {
 
       await allure.tags('Mobilne', 'Edycja zamówienia');
@@ -1919,7 +1677,7 @@ test.describe('Testy edycji zamówienia', async () => {
 
   test.describe('Edycja zamówienia ze zwrotem środków', async () => {
 
-    test('M | Zwrot środków zamówienia Blikiem z pełną manipulacją produktów w koszyku', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addAddressDelivery, browser }) => {
+    test('M | Zwrot środków zamówienia DPAY z pełną manipulacją produktów w koszyku', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addAddressDelivery, browser }) => {
       
         await allure.tags('Mobilne', 'Edycja zamówienia');
         await allure.epic('Mobilne');
@@ -1964,8 +1722,7 @@ test.describe('Testy edycji zamówienia', async () => {
         await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
         await page.waitForLoadState('load');
         await page.waitForTimeout(2000);
-        await paymentsPage.waitForLoaderAndSelectPaymentMethod('Kod BLIK');
-        await paymentsPage.enterBlikCode('777111');
+        await paymentsPage.waitForLoaderAndSelectPaymentMethod('Płatność kartą online');
         await paymentsPage.checkStatue();
         const summaryPrice = parseFloat((await cartPage.getTotalSummaryValue.textContent() || '0')
         .replace(/[^0-9,.]/g, '')
@@ -1973,6 +1730,8 @@ test.describe('Testy edycji zamówienia', async () => {
         console.log(summaryPrice);
         await cartPage.clickCartPaymentConfirmationButton();
         await cartPage.waitForPaymentConfirmationButton();
+
+        await przelewy24Page.payWithDpay();
 
         await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/podsumowanie'), { timeout: 20000 });
         await expect(page.getByText('Nr zamówienia: ')).toBeVisible();
@@ -2180,242 +1939,6 @@ test.describe('Testy edycji zamówienia', async () => {
         .replace(',', '.'));
         expect(finalPrice).toBe(summaryPriceAfterChanges);
     })
-
-    test('M | Zwrot środków za zamówienie przelewem', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery, browser }) => {
-
-        await allure.tags('Mobilne', 'Edycja zamówienia');
-        await allure.epic('Mobilne');
-        await allure.parentSuite('Profil');
-        await allure.suite('Testy edycji zamówienia');
-        await allure.subSuite('Edycja zamówienia z zwrotem środków');
-        await allure.allureId('2458');
-          
-        test.skip(`${process.env.URL}` == 'https://mamyito.pl', 'Test wymaga złożenia zamówienia');
-      
-        test.setTimeout(150000);
-    
-        await addProduct(product);
-  
-        await searchbarPage.getProductItemCount.first().click();
-        await page.waitForTimeout(1000);
-        await searchbarPage.getProductItemCount.first().type('1');
-        await commonPage.getCartButton.click();
-        await page.waitForTimeout(1000);
-    
-        await page.goto('/koszyk', { waitUntil: 'load'});
-        await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
-        await cartPage.clickCartSummaryButton();
-        await page.waitForLoadState('load');
-        await page.waitForTimeout(2000);
-        await paymentsPage.closeAddressModal();
-        await addAddressDelivery('Adres Testowy');
-        await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
-        await deliveryPage.getDeliverySlotButton.first().click();
-        await cartPage.clickCartSummaryPaymentButton();
-        await deliveryPage.clickConfirmReservationButton();
-        await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
-        await page.waitForLoadState('load');
-        await paymentsPage.waitForLoaderAndSelectPaymentMethod('Przelew online');
-        await paymentsPage.checkStatue();
-        await page.waitForTimeout(1000);
-        const summaryPrice = parseFloat((await cartPage.getTotalSummaryValue.textContent() || '0')
-        .replace(/[^0-9,.]/g, '')
-        .replace(',', '.'));
-        console.log(summaryPrice);
-        await cartPage.clickCartPaymentConfirmationButton();
-        await cartPage.waitForPaymentConfirmationButton();
-    
-        await expect(page).toHaveURL(new RegExp('^https://sandbox-go.przelewy24.pl/trnRequest/'), { timeout: 15000 });
-        await przelewy24Page.clickMainTransferButton();
-        await przelewy24Page.clickChosenTransferButton();
-        await expect(page).toHaveURL(new RegExp('^https://vsa.przelewy24.pl/pl/payment'), { timeout: 15000 });
-        await page.waitForTimeout(1000);
-  
-        const expectedUrlPattern = /^https:\/\/sandbox-go\.przelewy24\.pl\/trnResult\//;
-        const maxTries = 5;
-        let urlChanged = false;
-  
-        for (let i = 0; i < maxTries; i++) {
-          await przelewy24Page.clickPayButton();
-          await page.waitForTimeout(1000);
-  
-          const currentUrl = page.url();
-          if (expectedUrlPattern.test(currentUrl)) {
-            urlChanged = true;
-            break;
-          }
-        }
-  
-        expect(urlChanged).toBe(true);
-  
-        await przelewy24Page.clickBackToShopButton();
-        await page.waitForTimeout(2000);
-    
-        await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/podsumowanie'), { timeout: 20000 });
-        await expect(page.getByText('Nr zamówienia: ')).toBeVisible();
-        await expect(paymentsPage.getOrderDetailsButton).toBeVisible();
-        await expect(paymentsPage.getRepeatOrderButton).toBeVisible();
-        await expect(paymentsPage.getBackHomeButton).toBeVisible();
-    
-        await paymentsPage.clickOrderDetailsButton();
-    
-        await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/profil/zamowienia\\?order=.*'), { timeout: 30000 });
-    
-        await expect(orderDetailsPage.getEditOrderButton).toBeVisible({ timeout: 10000 });
-    
-        const productNames = await orderDetailsPage.getProductNames.all();
-        const productQuantities = await orderDetailsPage.getProductQuantity.all();
-    
-        const initialProducts: { name: string | undefined; quantity: number; }[] = [];
-    
-        for (let i = 0; i < productNames.length; i++) {
-        const name = await productNames[i].textContent();
-        const quantity = await productQuantities[i].textContent();
-        
-        initialProducts.push({
-            name: name?.trim(),
-            quantity: parseFloat(quantity?.trim() || '0'),
-          });
-          await page.waitForTimeout(1000);
-        }
-    
-        console.log(initialProducts);
-        
-        await orderDetailsPage.clickEditOrderButton();
-        await expect(orderEditPage.getEditOrderModalTitle).toBeVisible({ timeout: 10000 });
-        await expect(orderEditPage.getApplyEditOrderModalButton).toBeVisible({ timeout: 10000 });
-        await orderEditPage.clickApplyEditOrderModalButton();
-        await expect(orderEditPage.getEditOrderModalTitle).not.toBeVisible({ timeout: 10000 });
-
-        await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
-  
-        const notificationButton = page.getByText('Produkty dodane do koszyka nie są zarezerwowane').locator('..').locator('..').locator('button');
-        const notificationButtonIsVisible = await notificationButton.isVisible();
-  
-        if (notificationButtonIsVisible) {
-          await notificationButton.click();
-        } else {
-          return;
-        }
-  
-        const productNamesCart = await cartPage.getProductNames.all();
-        const productQuantitiesCart = await cartPage.getProductQuantities.all();
-    
-        const initialProductsCart: { name: string | undefined; quantity: number; }[] = [];
-    
-        for (let i = 0; i < productNamesCart.length; i++) {
-          const name = await productNamesCart[i].textContent();
-          const quantity = await productQuantitiesCart[i].inputValue();
-          
-          initialProductsCart.push({
-            name: name?.trim(),
-            quantity: parseFloat(quantity?.trim() || '0'),
-          });
-        }
-    
-        console.log(initialProductsCart);
-    
-        expect(initialProducts).toEqual(initialProductsCart);
-    
-        await page.locator('div[data-sentry-element="TabletContent"] svg[class*="tabler-icon tabler-icon-minus"]').first().scrollIntoViewIfNeeded();
-        await page.locator('div[data-sentry-element="TabletContent"] svg[class*="tabler-icon tabler-icon-minus"]').first().click();
-        await page.waitForTimeout(5000);
-    
-        const productNamesCartAfterChanges = await cartPage.getProductNames.all();
-        const productQuantitiesCartAfterChanges = await cartPage.getProductQuantities.all();
-    
-        const initialProductsCartAfterChanges: { name: string | undefined; quantity: number; }[] = [];
-    
-        for (let i = 0; i < productNamesCartAfterChanges.length; i++) {
-          const name = await productNamesCartAfterChanges[i].textContent();
-          const quantity = await productQuantitiesCartAfterChanges[i].inputValue();
-          
-          initialProductsCartAfterChanges.push({
-            name: name?.trim(),
-            quantity: parseFloat(quantity?.trim() || '0'),
-          });
-        }
-    
-        console.log(initialProductsCartAfterChanges);
-    
-        const summaryPriceAfterChanges = parseFloat((await cartPage.getTotalSummaryValue.textContent() || '0')
-            .replace(/[^0-9,.]/g, '')
-            .replace(',', '.'));
-    
-        console.log(summaryPriceAfterChanges);
-    
-        const priceDifference = Math.abs((summaryPriceAfterChanges - summaryPrice)).toFixed(2).replace(/\.?0+$/, '');
-        console.log('Różnica w cenie:', priceDifference);
-  
-        await expect(orderEditPage.getApplyEditOrderCartButton).toBeVisible({ timeout: 50000 });
-        await orderEditPage.clickApplyEditOrderCartButton();
-    
-        await expect(orderEditPage.getConfirmationEditOrderCartModalTitle).toBeVisible({ timeout: 15000 });
-        const button = page.getByRole('button', { name: `Do zwrotu ${priceDifference} zł`});
-        const project = browser.browserType().name();
-
-        if (project === 'webkit') {
-          await page.evaluate(async () => {
-            window.scrollBy(0, 1550)
-            await new Promise(r => setTimeout(r, 700));
-            window.scrollBy(0, 500)
-            await new Promise(r => setTimeout(r, 700));
-          });
-        } else {
-          await page.mouse.wheel(0, 1500);
-          await page.waitForTimeout(700);
-          await page.mouse.wheel(0, 500);
-          await page.waitForTimeout(700);
-        }
-
-        await expect(button).toBeVisible({ timeout: 5000 });
-        await page.waitForTimeout(700);
-        await button.click({ force: true });
-  
-        await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/podsumowanie'), { timeout: 30000 });
-        await expect(page.getByText('Edytowano zamówienie', { exact: true })).toBeVisible({ timeout: 30000 });
-        await expect(page.getByText('Nr zamówienia: ')).toBeVisible();
-        await expect(paymentsPage.getOrderDetailsButton).toBeVisible();
-        await expect(paymentsPage.getRepeatOrderButton).toBeVisible();
-        await expect(paymentsPage.getBackHomeButton).toBeVisible();
-  
-        await paymentsPage.clickOrderDetailsButton();
-        await expect(page).toHaveURL(new RegExp(`${baseURL}` + '/profil/zamowienia\\?order=.*'), { timeout: 30000 });
-  
-        await expect(orderDetailsPage.getBackToOrdersButton).toBeVisible({ timeout: 15000 });
-        await expect(orderDetailsPage.getRepeatOrderButton).toBeVisible({ timeout: 15000 });
-        
-        await expect(orderDetailsPage.getEditOrderButton).not.toBeVisible({ timeout: 10000 });
-  
-        const productNamesAfterEdit = await orderDetailsPage.getProductNames.all();
-        const productQuantitiesAfterEdit = await orderDetailsPage.getProductQuantity.all();
-  
-        const initialProductsAfterEdit: { name: string | undefined; quantity: number; }[] = [];
-  
-        for (let i = 0; i < productNamesAfterEdit.length; i++) {
-        const name = await productNamesAfterEdit[i].textContent();
-        const quantity = await productQuantitiesAfterEdit[i].textContent();
-        
-        initialProductsAfterEdit.push({
-            name: name?.trim(),
-            quantity: parseFloat(quantity?.trim() || '0'),
-          });
-          await page.waitForTimeout(1000);
-        }
-  
-        console.log(initialProductsAfterEdit);
-  
-        expect(initialProductsCartAfterChanges).toEqual(initialProductsAfterEdit);
-  
-        expect(productNamesAfterEdit.length).toBe(1);
-  
-        await expect(page.getByText('Metoda płatności').locator('..').locator('div').last()).toContainText('Przelewy24');
-    
-        const finalPrice = parseFloat((await page.getByText('Kwota').locator('..').locator('div').last().textContent() || '0')
-          .replace(/[^0-9,.]/g, '')
-          .replace(',', '.'));
-        expect(finalPrice).toBe(summaryPriceAfterChanges);
-      })
 
     test('M | Zwrot środków za zamówienie kartą przy odbiorze', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery, browser }) => {
 

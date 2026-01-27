@@ -415,7 +415,7 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await expect(commonPage.getCartProductsPrice).toBeVisible({ timeout: 5000 });
   })
           
-  test('W | Możliwość ponownego zamówienia po złożeniu zamówienia z błędną płatnością', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI }) => {
+  test('W | Możliwość ponownego zamówienia po złożeniu zamówienia z błędną płatnością', { tag: ['@Beta', '@Test'] }, async ({ page, addProduct, baseURL, cancelOrderViaAPI, addAddressDelivery }) => {
 
     await allure.tags('Web', 'Profil');
     await allure.epic('Webowe');
@@ -436,10 +436,17 @@ test.describe('Testy szczegółów zamówienia', async () => {
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
     await cartPage.clickCartSummaryButton();
+    await page.waitForLoadState('load');
+    await page.waitForTimeout(2000);
+    await paymentsPage.closeAddressModal();
+    await addAddressDelivery('Adres Testowy');
     await page.waitForSelector(selectors.DeliveryPage.common.deliverySlot, { timeout: 10000 });
     await deliveryPage.getDeliverySlotButton.first().click();
     await cartPage.clickCartSummaryPaymentButton();
-    await page.getByText('Przelew online').click({ force: true });
+    await deliveryPage.clickConfirmReservationButton();
+    await expect(deliveryPage.getAddressModal).not.toBeVisible({ timeout: 15000 });
+    await page.waitForLoadState('load');
+    await paymentsPage.waitForLoaderAndSelectPaymentMethod('Przelew online');
     await paymentsPage.checkStatue();
     await cartPage.clickCartPaymentConfirmationButton();
     await cartPage.waitForPaymentConfirmationButton();

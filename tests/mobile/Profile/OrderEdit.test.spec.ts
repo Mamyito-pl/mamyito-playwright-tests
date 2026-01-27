@@ -2662,4 +2662,4 @@ test.describe.skip('Testy edycji zamówienia', async () => {
       expect(finalPrice).toBe(summaryPriceAfterChanges);
     })
   })
-})
+})*/

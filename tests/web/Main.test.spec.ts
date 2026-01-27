@@ -138,7 +138,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(page).toHaveURL(/\/dostawa/, { timeout: 10000 });
   })
 
-  test('W | Możliwość przewijania slidera promocji', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
+  test('W | Możliwość przewijania slidera promocji', { tag: ['@Prod', '@Test'] }, async ({ page }) => {
 
     await allure.tags('Web', 'Strona główna');
     await allure.epic('Webowe');

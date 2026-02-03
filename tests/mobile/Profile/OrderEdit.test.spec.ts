@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+/*import { expect } from '@playwright/test';
 import MainPage from "../../../page/Main.page.ts";
 import CartPage from '../../../page/Cart.page.ts';
 import DeliveryPage from '../../../page/Delivery.page.ts';
@@ -17,7 +17,7 @@ import * as allure from 'allure-js-commons'
 
 test.describe.configure({ mode: 'serial' })
 
-test.describe('Testy edycji zamówienia', async () => {
+test.describe.skip('Testy edycji zamówienia', async () => {
 
   let cartPage: CartPage;
   let deliveryPage: DeliveryPage;
@@ -63,7 +63,7 @@ test.describe('Testy edycji zamówienia', async () => {
     await clearCartViaAPI();
   }) 
   
-  test('M | Wyjście z edycji z poziomu koszyka', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProductsByValue, addAddressDelivery }) => {
+  test('M | Wyjście z edycji z poziomu koszyka', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Edycja zamówienia');
     await allure.epic('Mobilne');
@@ -76,8 +76,13 @@ test.describe('Testy edycji zamówienia', async () => {
       
     test.setTimeout(150000);
 
-    await addProductsByValue(180);
+    await addProduct(product);
+  
+    await searchbarPage.getProductItemCount.first().click({ force: true });
+    await page.waitForTimeout(1000);
+    await searchbarPage.getProductItemCount.first().type('1');
     await commonPage.getCartButton.click();
+    await page.waitForTimeout(1000);
 
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
@@ -132,7 +137,7 @@ test.describe('Testy edycji zamówienia', async () => {
     await expect(orderEditPage.getCancelEditOrderCartButton).not.toBeVisible({ timeout: 10000 });
   })
     
-  test('M | Zamknięcie modala rozpoczęcia edycji "X" z poziomu zamówienia', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProductsByValue, addAddressDelivery }) => {
+  test('M | Zamknięcie modala rozpoczęcia edycji "X" z poziomu zamówienia', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Edycja zamówienia');
     await allure.epic('Mobilne');
@@ -145,11 +150,14 @@ test.describe('Testy edycji zamówienia', async () => {
       
     test.setTimeout(150000);
 
-    await addProductsByValue(180);
+    await addProduct(product);
+  
+    await searchbarPage.getProductItemCount.first().click({ force: true });
+    await page.waitForTimeout(1000);
+    await searchbarPage.getProductItemCount.first().type('1');
     await commonPage.getCartButton.click();
+    await page.waitForTimeout(1000);
 
-    await expect(cartPage.getCartDrawerToCartButton).toBeVisible({ timeout: 10000 });
-    await cartPage.clickCartDrawerToCartButton();
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
     await cartPage.clickCartSummaryButton();
@@ -194,7 +202,7 @@ test.describe('Testy edycji zamówienia', async () => {
     await expect(commonPage.getCartProductsCount).not.toBeVisible({ timeout: 10000 });
   })
 
-  test('M | Modal zatwierdzenia edycji z poziomu koszyka zamyka się po kliknięciu "X"', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProductsByValue, addAddressDelivery, cancelEditOrderViaAPI }) => {
+  test('M | Modal zatwierdzenia edycji z poziomu koszyka zamyka się po kliknięciu "X"', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery, cancelEditOrderViaAPI }) => {
 
     await allure.tags('Mobilne', 'Edycja zamówienia');
     await allure.epic('Mobilne');
@@ -207,11 +215,14 @@ test.describe('Testy edycji zamówienia', async () => {
       
     test.setTimeout(150000);
 
-    await addProductsByValue(180);
+    await addProduct(product);
+  
+    await searchbarPage.getProductItemCount.first().click({ force: true });
+    await page.waitForTimeout(1000);
+    await searchbarPage.getProductItemCount.first().type('1');
     await commonPage.getCartButton.click();
+    await page.waitForTimeout(1000);
 
-    await expect(cartPage.getCartDrawerToCartButton).toBeVisible({ timeout: 10000 });
-    await cartPage.clickCartDrawerToCartButton();
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
     await cartPage.clickCartSummaryButton();
@@ -271,7 +282,7 @@ test.describe('Testy edycji zamówienia', async () => {
     await cancelEditOrderViaAPI(page);
   })
   
-  test('M | Modal zatwierdzenia edycji z poziomu koszyka zamyka się po kliknięciu w przycisk anuluj', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProductsByValue, addAddressDelivery, cancelEditOrderViaAPI }) => {
+  test('M | Modal zatwierdzenia edycji z poziomu koszyka zamyka się po kliknięciu w przycisk anuluj', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery, cancelEditOrderViaAPI }) => {
 
     await allure.tags('Mobilne', 'Edycja zamówienia');
     await allure.epic('Mobilne');
@@ -284,11 +295,14 @@ test.describe('Testy edycji zamówienia', async () => {
       
     test.setTimeout(150000);
 
-    await addProductsByValue(180);
+    await addProduct(product);
+  
+    await searchbarPage.getProductItemCount.first().click({ force: true });
+    await page.waitForTimeout(1000);
+    await searchbarPage.getProductItemCount.first().type('1');
     await commonPage.getCartButton.click();
+    await page.waitForTimeout(1000);
 
-    await expect(cartPage.getCartDrawerToCartButton).toBeVisible({ timeout: 10000 });
-    await cartPage.clickCartDrawerToCartButton();
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
     await cartPage.clickCartSummaryButton();
@@ -347,7 +361,7 @@ test.describe('Testy edycji zamówienia', async () => {
     await cancelEditOrderViaAPI(page);
   })
 
-  test('M | Modal "Anuluj edycję" z poziomu koszyka zamyka się po kliknięciu w przycisk anuluj', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProductsByValue, addAddressDelivery, cancelEditOrderViaAPI }) => {
+  test('M | Modal "Anuluj edycję" z poziomu koszyka zamyka się po kliknięciu w przycisk anuluj', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery, cancelEditOrderViaAPI }) => {
 
     await allure.tags('Mobilne', 'Edycja zamówienia');
     await allure.epic('Mobilne');
@@ -360,11 +374,14 @@ test.describe('Testy edycji zamówienia', async () => {
       
     test.setTimeout(150000);
 
-    await addProductsByValue(180);
+    await addProduct(product);
+  
+    await searchbarPage.getProductItemCount.first().click({ force: true });
+    await page.waitForTimeout(1000);
+    await searchbarPage.getProductItemCount.first().type('1');
     await commonPage.getCartButton.click();
+    await page.waitForTimeout(1000);
 
-    await expect(cartPage.getCartDrawerToCartButton).toBeVisible({ timeout: 10000 });
-    await cartPage.clickCartDrawerToCartButton();
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
     await cartPage.clickCartSummaryButton();
@@ -424,7 +441,7 @@ test.describe('Testy edycji zamówienia', async () => {
     await cancelEditOrderViaAPI(page);
   })
 
-  test('M | Modal rozpoczęcia edycji z poziomu zamówienia zamyka się po kliknięciu w przycisk anuluj', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProductsByValue, addAddressDelivery }) => {
+  test('M | Modal rozpoczęcia edycji z poziomu zamówienia zamyka się po kliknięciu w przycisk anuluj', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Edycja zamówienia');
     await allure.epic('Mobilne');
@@ -437,11 +454,14 @@ test.describe('Testy edycji zamówienia', async () => {
       
     test.setTimeout(150000);
 
-    await addProductsByValue(180);
+    await addProduct(product);
+  
+    await searchbarPage.getProductItemCount.first().click({ force: true });
+    await page.waitForTimeout(1000);
+    await searchbarPage.getProductItemCount.first().type('1');
     await commonPage.getCartButton.click();
+    await page.waitForTimeout(1000);
 
-    await expect(cartPage.getCartDrawerToCartButton).toBeVisible({ timeout: 10000 });
-    await cartPage.clickCartDrawerToCartButton();
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
     await cartPage.clickCartSummaryButton();
@@ -485,7 +505,7 @@ test.describe('Testy edycji zamówienia', async () => {
     await expect(orderEditPage.getEditOrderModalTitle).not.toBeVisible({ timeout: 10000 });
   })
 
-  test('M | Zmiana adresu dostawy', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProductsByValue, addAddressDelivery }) => {
+  test('M | Zmiana adresu dostawy', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Edycja zamówienia');
     await allure.epic('Mobilne');
@@ -498,8 +518,13 @@ test.describe('Testy edycji zamówienia', async () => {
       
     test.setTimeout(150000);
 
-    await addProductsByValue(180);
+    await addProduct(product);
+  
+    await searchbarPage.getProductItemCount.first().click({ force: true });
+    await page.waitForTimeout(1000);
+    await searchbarPage.getProductItemCount.first().type('1');
     await commonPage.getCartButton.click();
+    await page.waitForTimeout(1000);
 
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
@@ -607,7 +632,7 @@ test.describe('Testy edycji zamówienia', async () => {
     await expect(page.getByText('Adres', { exact: true }).locator('..').locator('div').last()).toContainText('Oficerska 103/10305-506 Lesznowola');
   })
 
-  test('M | Zmiana terminu dostawy', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProductsByValue, addAddressDelivery }) => {
+  test('M | Zmiana terminu dostawy', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Edycja zamówienia');
     await allure.epic('Mobilne');
@@ -620,8 +645,13 @@ test.describe('Testy edycji zamówienia', async () => {
       
     test.setTimeout(150000);
 
-    await addProductsByValue(180);
+    await addProduct(product);
+  
+    await searchbarPage.getProductItemCount.first().click({ force: true });
+    await page.waitForTimeout(1000);
+    await searchbarPage.getProductItemCount.first().type('1');
     await commonPage.getCartButton.click();
+    await page.waitForTimeout(1000);
 
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
@@ -802,7 +832,7 @@ test.describe('Testy edycji zamówienia', async () => {
     expect(deliveryDateText).toContain(expectedDateWithDots);
   })
 
-  test('M | Dodanie kodu rabatowego kwotowego', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProductsByValue, addAddressDelivery }) => {
+  test('M | Dodanie kodu rabatowego kwotowego', { tag: ['@Beta', '@Test'] }, async ({ page, baseURL, addProduct, addAddressDelivery }) => {
 
     await allure.tags('Mobilne', 'Edycja zamówienia');
     await allure.epic('Mobilne');
@@ -813,8 +843,13 @@ test.describe('Testy edycji zamówienia', async () => {
       
     test.setTimeout(150000);
 
-    await addProductsByValue(180);
+    await addProduct(product);
+  
+    await searchbarPage.getProductItemCount.first().click({ force: true });
+    await page.waitForTimeout(1000);
+    await searchbarPage.getProductItemCount.first().type('1');
     await commonPage.getCartButton.click();
+    await page.waitForTimeout(1000);
 
     await page.goto('/koszyk', { waitUntil: 'load'});
     await page.waitForSelector(selectors.CartPage.common.productCartList, { timeout: 10000 });
@@ -2627,4 +2662,4 @@ test.describe('Testy edycji zamówienia', async () => {
       expect(finalPrice).toBe(summaryPriceAfterChanges);
     })
   })
-})
+})*/

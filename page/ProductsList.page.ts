@@ -195,7 +195,7 @@ export default class ProductsListPage {
     }
 
     get getHorizontalMenu() {
-        return this.page.locator('div[data-sentry-component="HorizontalCategoryFilters"]');
+        return this.page.locator('div[data-sentry-component="HorizontalCategoryFilters"] div h3');
     }
 
     get getProductTypeFilter() {

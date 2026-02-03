@@ -867,8 +867,7 @@ export const test = baseTest.extend<MyFixtures>({
       let currentValue = 0;
       let addedCount = 0;
       
-      await page.goto(`${process.env.URL}/multipaki`, { waitUntil: 'load' });
-      await productsListPage.getProductCategoryTitle('Multipaki').waitFor({ state: 'visible', timeout: 15000 });
+      await page.goto(`${process.env.URL}/multipaki`, { waitUntil: 'networkidle' });
       await page.waitForTimeout(10000);
 
       const productPriceElements = await page.locator('[data-cy="product-card-current-price"]').all();

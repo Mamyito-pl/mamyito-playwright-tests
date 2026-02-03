@@ -52,7 +52,7 @@ test.describe('Testy szczegółów produktu', async () => {
     await clearCartViaAPI();
   }) 
 
-  test('W | Strona produktu otwiera się ze wszystkimi wymaganymi polami', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, searchProduct }) => {
+  test('W | Strona produktu otwiera się ze wszystkimi wymaganymi polami', { tag: ['@Prod', '@Test'] }, async ({ page, searchProduct }) => {
 
     await allure.tags('Web', 'Szczegóły produktu');
     await allure.epic('Webowe');

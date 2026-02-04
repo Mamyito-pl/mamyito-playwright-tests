@@ -113,7 +113,7 @@ test.describe('Testy strony głównej', async () => {
     await expect(mainPage.getNewsletterCheckbox).toBeVisible();
   })
 
-  test('M | Możliwość przewijania slidera promocji', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page }) => {
+  test('M | Możliwość przewijania slidera promocji', { tag: ['@Prod', '@Test'] }, async ({ page }) => {
 
     await allure.tags('Mobilne', 'Strona główna');
     await allure.epic('Mobilne');

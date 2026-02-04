@@ -23,7 +23,7 @@ test.describe('Testy listy zamówień', async () => {
     ordersPage = new OrdersPage(page);
   })
   
-  test('M | Strona zamówień wyświetla się ze wszystkimi potrzebnymi polami', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, baseURL }) => {
+  test.skip('M | Strona zamówień wyświetla się ze wszystkimi potrzebnymi polami', { tag: ['@Prod', '@Beta', '@Test'] }, async ({ page, baseURL }) => {
 
     await allure.tags('Mobilne', 'Profil');
     await allure.epic('Mobilne');
@@ -31,6 +31,8 @@ test.describe('Testy listy zamówień', async () => {
     await allure.suite('Testy listy zamówień');
     await allure.subSuite('');
     await allure.allureId('1937');
+
+    // Unskip if campaign will be off
 
     let orderTotal: string | undefined;
 
